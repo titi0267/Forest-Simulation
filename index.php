@@ -109,7 +109,6 @@
                 [45, 60, 4],
                 [60, 250, 5],
             ];
-            $status = "";
 
             for ($group = 1; $group <= $NoGroupSpecies; $group++) {
                 for ($class = 0; $class < $NumDclass; $class++) {
@@ -131,7 +130,10 @@
                         $y = ($blockY - 1) * 100 + $locationy;
                         $treeId = "T" . ($blockX < 10 ? "0" . strval($blockX) : strval($blockX)) . ($blockY < 10 ? "0" . strval($blockY) : strval($blockY)) . ($x < 10 ? "0" . strval($x) : strval($x)) . ($y < 10 ? "0" . strval($y) : strval($y));
                         $volume = 3.142 * ($diameter / 200) ** 2 * $height * 0.50;
-                        $status = (in_array($group, [1, 2, 3, 5]) && $diameter < 45) ? "Keep" : "Cut";
+                        $status = "";
+                        if (in_array($group, [1, 2, 3, 5])) {
+                            $status = ($diameter < 45) ? "Keep" : "Cut";
+                        }
                         $sql = "INSERT INTO `trees` (`BlockX`, `BlockY`, `x`, `y`, `TreeNum`, `species`, `spgroup`, `Diameter`, `DiameterClass`, `Height`, `Volume`, `status`)
                                 VALUES ('$blockX', '$blockY', '$x', '$y', '$treeId', '$species', '$group', '" . round($diameter, 1) . "', '$diameterClass', '" . round($height, 1) . "', '$volume', '$status')";
                         $connection->query($sql);
