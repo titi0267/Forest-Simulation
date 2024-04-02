@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : mer. 27 mars 2024 à 06:15
+-- Généré le : mar. 02 avr. 2024 à 17:10
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : mer. 27 mars 2024 à 09:03
+-- Généré le : mar. 02 avr. 2024 à 17:09
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -41,41 +41,41 @@ CREATE TABLE `SpeciesGroup` (
 --
 
 INSERT INTO `SpeciesGroup` (`id`, `groupId`, `groupName`, `diameterMin`, `diameterMax`, `denstity`) VALUES
-(1, 1, 'Mersawa', 5, 15, 15),
-(2, 1, 'Mersawa', 15, 30, 12),
-(3, 1, 'Mersawa', 30, 45, 4),
-(4, 1, 'Mersawa', 45, 60, 2),
-(5, 1, 'Mersawa', 60, 200, 2),
-(6, 2, 'Keruing', 5, 15, 21),
-(7, 2, 'Keruing', 15, 30, 18),
-(8, 2, 'Keruing', 30, 45, 6),
-(9, 2, 'Keruing', 45, 60, 4),
-(10, 2, 'Keruing', 60, 200, 4),
-(11, 3, 'Dip Commercial', 5, 15, 21),
-(12, 3, 'Dip Commercial', 15, 30, 18),
-(13, 3, 'Dip Commercial', 30, 45, 6),
-(14, 3, 'Dip Commercial', 45, 60, 4),
-(15, 3, 'Dip Commercial', 60, 200, 4),
-(16, 4, 'Dip NonCommercial', 5, 15, 30),
-(17, 4, 'Dip NonCommercial', 15, 30, 27),
-(18, 4, 'Dip NonCommercial', 30, 45, 9),
-(19, 4, 'Dip NonCommercial', 45, 60, 5),
-(20, 4, 'Dip NonCommercial', 60, 200, 3),
-(21, 5, 'NonDip Commercial', 5, 15, 30),
-(22, 5, 'NonDip Commercial', 15, 30, 27),
-(23, 5, 'NonDip Commercial', 30, 45, 9),
-(24, 5, 'NonDip Commercial', 45, 60, 4),
-(25, 5, 'NonDip Commercial', 60, 200, 4),
-(26, 6, 'NonDip NonCommercial', 5, 15, 39),
-(27, 6, 'NonDip NonCommercial', 15, 30, 36),
-(28, 6, 'NonDip NonCommercial', 30, 45, 12),
-(29, 6, 'NonDip NonCommercial', 45, 60, 7),
-(30, 6, 'NonDip NonCommercial', 60, 200, 4),
-(31, 7, 'Others', 5, 15, 44),
-(32, 7, 'Others', 15, 30, 42),
-(33, 7, 'Others', 30, 45, 14),
-(34, 7, 'Others', 45, 60, 9),
-(35, 7, 'Others', 60, 200, 4);
+(36, 1, 'Mersawa', 5, 15, 15),
+(37, 1, 'Mersawa', 15, 30, 12),
+(38, 1, 'Mersawa', 30, 45, 4),
+(39, 1, 'Mersawa', 45, 60, 2),
+(40, 1, 'Mersawa', 60, 250, 2),
+(41, 2, 'Keruing', 5, 15, 21),
+(42, 2, 'Keruing', 15, 30, 18),
+(43, 2, 'Keruing', 30, 45, 6),
+(44, 2, 'Keruing', 45, 60, 4),
+(45, 2, 'Keruing', 60, 250, 4),
+(46, 3, 'Dip Commercial', 5, 15, 21),
+(47, 3, 'Dip Commercial', 15, 30, 18),
+(48, 3, 'Dip Commercial', 30, 45, 6),
+(49, 3, 'Dip Commercial', 45, 60, 4),
+(50, 3, 'Dip Commercial', 60, 250, 4),
+(51, 4, 'Dip NonCommercial', 5, 15, 30),
+(52, 4, 'Dip NonCommercial', 15, 30, 27),
+(53, 4, 'Dip NonCommercial', 30, 45, 9),
+(54, 4, 'Dip NonCommercial', 45, 60, 5),
+(55, 4, 'Dip NonCommercial', 60, 250, 3),
+(56, 5, 'NonDip Commercial', 5, 15, 30),
+(57, 5, 'NonDip Commercial', 15, 30, 27),
+(58, 5, 'NonDip Commercial', 30, 45, 9),
+(59, 5, 'NonDip Commercial', 45, 60, 4),
+(60, 5, 'NonDip Commercial', 60, 250, 4),
+(61, 6, 'NonDip NonCommercial', 5, 15, 39),
+(62, 6, 'NonDip NonCommercial', 15, 30, 36),
+(63, 6, 'NonDip NonCommercial', 30, 45, 12),
+(64, 6, 'NonDip NonCommercial', 45, 60, 7),
+(65, 6, 'NonDip NonCommercial', 60, 250, 4),
+(66, 7, 'Others', 5, 15, 44),
+(67, 7, 'Others', 15, 30, 42),
+(68, 7, 'Others', 30, 45, 14),
+(69, 7, 'Others', 45, 60, 9),
+(70, 7, 'Others', 60, 250, 4);
 
 --
 -- Index pour les tables déchargées
@@ -95,7 +95,7 @@ ALTER TABLE `SpeciesGroup`
 -- AUTO_INCREMENT pour la table `SpeciesGroup`
 --
 ALTER TABLE `SpeciesGroup`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
