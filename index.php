@@ -124,10 +124,12 @@
                             }
                         }
                         $height = rand(10 * 100, 35 * 100) / 100;
-                        $locationx = rand(1, 100);
-                        $locationy = rand(1, 100);
-                        $x = ($blockX - 1) * 100 + $locationx;
-                        $y = ($blockY - 1) * 100 + $locationy;
+                        $locationx = rand(1, 99);
+                        $locationy = rand(1, 99);
+                        $x = $locationx;
+                        $y = $locationy;
+                        // $x = ($blockX - 1) * 100 + $locationx;
+                        // $y = ($blockY - 1) * 100 + $locationy;
                         $treeId = "T" . ($blockX < 10 ? "0" . strval($blockX) : strval($blockX)) . ($blockY < 10 ? "0" . strval($blockY) : strval($blockY)) . ($x < 10 ? "0" . strval($x) : strval($x)) . ($y < 10 ? "0" . strval($y) : strval($y));
                         $volume = 3.142 * ($diameter / 200) ** 2 * $height * 0.50;
                         $status = "";
