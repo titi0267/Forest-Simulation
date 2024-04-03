@@ -50,7 +50,14 @@
                 die("Invalid query: " . $connection->error);
             }
 
-            $SPECIES_TABLE = array(1 => [], 2 => [], 3 => [], 4 => [], 5 => [], 6 => [], 7 => []);
+            $SPECIES_TABLE = array(
+                1 => [],
+                2 => [],
+                3 => [],
+                4 => [],
+                5 => [],
+                6 => [],
+                7 => []);
 
             while ($row = $result->fetch_assoc()) {
                 $speciesGroup = $row["Species_Group"];
@@ -60,7 +67,7 @@
                     "Species_Group" => $speciesGroup,
                     "Roy_Class" => $row["Roy_Class"],
                     "Comm_Group" => $row["Comm_Group"],
-                    "Dip_NonDip" => $row["Dip_NonDip"],    
+                    "Dip_NonDip" => $row["Dip_NonDip"],
                 ));
             }
 
@@ -109,6 +116,7 @@
                 [45, 60, 4],
                 [60, 250, 5],
             ];
+            $sqlValues = [];
 
             for ($group = 1; $group <= $NoGroupSpecies; $group++) {
                 for ($class = 0; $class < $NumDclass; $class++) {
@@ -124,23 +132,27 @@
                             }
                         }
                         $height = rand(10 * 100, 35 * 100) / 100;
-                        $locationx = rand(1, 100);
-                        $locationy = rand(1, 100);
-                        $x = ($blockX - 1) * 100 + $locationx;
-                        $y = ($blockY - 1) * 100 + $locationy;
+                        $locationx = rand(1, 99);
+                        $locationy = rand(1, 99);
+                        $x = $locationx;
+                        $y = $locationy;
+                        // $x = ($blockX - 1) * 100 + $locationx;
+                        // $y = ($blockY - 1) * 100 + $locationy;
                         $treeId = "T" . ($blockX < 10 ? "0" . strval($blockX) : strval($blockX)) . ($blockY < 10 ? "0" . strval($blockY) : strval($blockY)) . ($x < 10 ? "0" . strval($x) : strval($x)) . ($y < 10 ? "0" . strval($y) : strval($y));
                         $volume = 3.142 * ($diameter / 200) ** 2 * $height * 0.50;
                         $status = "";
                         if (in_array($group, [1, 2, 3, 5])) {
                             $status = ($diameter < 45) ? "Keep" : "Cut";
                         }
-                        $sql = "INSERT INTO `trees` (`BlockX`, `BlockY`, `x`, `y`, `TreeNum`, `species`, `spgroup`, `Diameter`, `DiameterClass`, `Height`, `Volume`, `status`)
-                                VALUES ('$blockX', '$blockY', '$x', '$y', '$treeId', '$species', '$group', '" . round($diameter, 1) . "', '$diameterClass', '" . round($height, 1) . "', '$volume', '$status')";
-                        $connection->query($sql);
+                        $sqlValues[] = "('$blockX', '$blockY', '$x', '$y', '$treeId', '$species', '$group', '" . round($diameter, 1) . "', '$diameterClass', '" . round($height, 1) . "', '$volume', '$status')";
                         // array_push($TREES, ["x" => $x, "y" => $y, "species" => $species, "diameter" => round($diameter, 2)]);
                     }
                 }
             }
+            $sqlValuesString = implode(", ", $sqlValues);
+            $sql = "INSERT INTO `trees` (`BlockX`, `BlockY`, `x`, `y`, `TreeNum`, `species`, `spgroup`, `Diameter`, `DiameterClass`, `Height`, `Volume`, `status`)
+                    VALUES $sqlValuesString";
+            $connection->query($sql);
         }
         function clear_trees()
         {
