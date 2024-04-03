@@ -26,8 +26,7 @@ const SidebarLayout = ({
     setIsCollapsed((prev) => !prev);
   }, []);
 
-  const title =
-    pathname.split("/")[1][0].toUpperCase() + pathname.split("/")[1].slice(1);
+  const title = items.find((item) => item.key == currentPath)?.title;
 
   return (
     <div className="flex h-dvh w-full">
