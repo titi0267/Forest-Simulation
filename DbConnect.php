@@ -4,7 +4,7 @@
     */
     class DbConnect {
         private $server = 'localhost';
-        private $dbname = 'tree';
+        private $dbname = 'forestdb';
         private $user = 'root';
         private $pass = '';
         public function connect() {
