@@ -39,4 +39,10 @@ export const items: SidebarItem[] = [
     icon: "mage:box-3d-upload",
     title: "Volume calculations",
   },
+  {
+    key: "aboutUs",
+    href: "/aboutUs",
+    icon: "mdi:about",
+    title: "About Us",
+  },
 ];

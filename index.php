@@ -3,15 +3,127 @@ header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: *");
 include("DbConnect.php");
 
-$conn = new DbConnect();
-$db = $conn->connect();
+$db = new DbConnect();
+$connection = $db->connect();
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'POST':
-        echo $_SERVER['REQUEST_URI'];
-        $data = json_decode(file_get_contents('php://input'));
-        echo json_encode("toto");
+        if ($_SERVER['REQUEST_URI'] === "/tree/generateforest/") {
+            generate();
+            $data = ['success' => true, 'message' => 'Generation succeeded !'];
+            echo json_encode($data);    
+        }
         break;
+    case 'GET':
+        if ($_SERVER['REQUEST_URI'] === "/tree/getforest/") {
+            $trees = getforest();
+            $data = ['success' => true, 'message' => $trees];
+            echo json_encode($data);
+        }
+        if ($_SERVER['REQUEST_URI'] === "/tree/getStandtable/") {
+            $standtable = getStandtable();
+            $data = ['success' => true, 'message' => $standtable];
+            echo json_encode($data);
+        }
+        break;
+}
+
+function getStandtable()
+{
+    global $connection;
+    $sql = "SELECT * FROM StandTable";
+    $result = $connection->query($sql);
+    if (!$result) {
+        die("Invalid query: " . $connection->errorInfo());
+    }
+    $standtable = array();
+    while ($row = $result->fetch()) {
+        array_push($standtable,
+            [
+                "GroupName" => $row["GroupName"],
+                "Diameter" => $row["Diameter"],
+                "Volume" => $row["Volume"],
+                "Num" => $row["Num"],
+            ]
+        );
+    }
+    return $standtable;
+}
+
+function getforest()
+{
+    global $connection;
+    $sql = "SELECT * FROM trees";
+    $result = $connection->query($sql);
+    if (!$result) {
+        die("Invalid query: " . $connection->errorInfo());
+    }
+    $trees = array();
+    while ($row = $result->fetch()) {
+        array_push($trees,
+            [
+                "BlockX" => $row["BlockX"],
+                "BlockY" => $row["BlockY"],
+                "x" => $row["x"],
+                "y" => $row["y"],
+                "TreeNum" => $row["TreeNum"],
+                "species" => $row["species"],
+                "spgroup" => $row["spgroup"],
+                "Diameter" => $row["Diameter"],
+                "DiameterClass" => $row["DiameterClass"],
+                "Height" => $row["Height"],
+                "Volume" => $row["Volume"],
+                "status" => $row["status"]
+            ]
+        );
+    }
+    return $trees;
+}
+
+function create_stand_table()
+{
+    $STAND_TABLE = [];
+    $group = array(1 => "Mersawa", 2 => "Keruing", 3 => "Dip Commercial", 4 => "Dip NonCommercial",
+        5 => "NonDip Commercial", 6 => "NonDip NonCommercial", 7 => "Others");
+
+    for ($spgroup = 1; $spgroup <= 7; $spgroup++) {
+        for ($diameter = 1; $diameter <= 5; $diameter++) {
+            $STAND_TABLE[$group[$spgroup]][$diameter] = ["Volume" => 0, "Num" => 0];
+        }
+    }
+
+    global $connection;
+    $sql = "SELECT * FROM trees";
+    $result = $connection->query($sql);
+    if (!$result) {
+        die("Invalid query: " . $connection->errorInfo());
+    }
+
+    while ($row = $result->fetch()) {
+        $speciesGroup = $row["spgroup"];
+        $diameterClass = $row["DiameterClass"];
+        $volume = $row["Volume"];
+        $STAND_TABLE[$group[$speciesGroup]][$diameterClass]["Volume"] += $volume;
+        $STAND_TABLE[$group[$speciesGroup]][$diameterClass]["Num"] += 1;
+    }
+    insert_stand_table_to_database($STAND_TABLE);
+}
+
+function insert_stand_table_to_database($STAND_TABLE)
+{
+    global $connection;
+
+    foreach ($STAND_TABLE as $groupName => $diameterClasses) {
+        foreach ($diameterClasses as $diameter => $data) {
+            $volume = $data["Volume"];
+            $num = $data["Num"];
+            $sqlValues[] = "('$groupName', '$diameter', '$volume', '$num')";
+        }
+    }
+    $sqlValuesString = implode(", ", $sqlValues);
+    $sql = "INSERT INTO `StandTable` (`GroupName`, `Diameter`, `Volume`, `Num`)
+                VALUES $sqlValuesString";
+    $connection->query($sql);
 }
 
 $TREES = array();
@@ -23,18 +135,10 @@ function generate()
     $sql = "SELECT * FROM tableName";
     $result = $connection->query($sql);
     if (!$result) {
-        die("Invalid query: " . $connection->error);
+        die("Invalid query: " . $connection->errorInfo());
     }
-    $SPECIES_TABLE = array(
-        1 => [],
-        2 => [],
-        3 => [],
-        4 => [],
-        5 => [],
-        6 => [],
-        7 => []
-    );
-    while ($row = $result->fetch_assoc()) {
+    $SPECIES_TABLE = array(1 => [], 2 => [], 3 => [], 4 => [], 5 => [], 6 => [], 7 => []);
+    while ($row = $result->fetch()) {
         $speciesGroup = $row["Species_Group"];
         array_push($SPECIES_TABLE[$speciesGroup], array(
             "Species_Code" => $row["Species_Code"],
@@ -48,10 +152,10 @@ function generate()
     $sql = "SELECT * FROM SpeciesGroup";
     $result = $connection->query($sql);
     if (!$result) {
-        die("Invalid query: " . $connection->error);
+        die("Invalid query: " . $connection->errorInfo());
     }
     $SPECIES_GROUP = array(1 => [], 2 => [], 3 => [], 4 => [], 5 => [], 6 => [], 7 => []);
-    while ($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch()) {
         $groupId = $row["groupId"];
         array_push($SPECIES_GROUP[$groupId], array(
             "groupId" => $groupId,
@@ -67,7 +171,7 @@ function generate()
             create_tree($blockX, $blockY, $SPECIES_TABLE, $SPECIES_GROUP);
         }
     }
-    var_dump($TREES);
+    create_stand_table();
 }
 function create_tree($blockX, $blockY, $SPECIES_TABLE, $SPECIES_GROUP)
 {
@@ -123,10 +227,16 @@ function create_tree($blockX, $blockY, $SPECIES_TABLE, $SPECIES_GROUP)
 function clear_trees()
 {
     global $connection;
+
     $sql = "DELETE FROM trees";
     $result = $connection->query($sql);
     if (!$result) {
-        die("Invalid query: " . $connection->error);
+        die("Invalid query: " . $connection->errorInfo());
+    }
+    $sql = "DELETE FROM StandTable";
+    $result = $connection->query($sql);
+    if (!$result) {
+        die("Invalid query: " . $connection->errorInfo());
     }
 }
 ?>
