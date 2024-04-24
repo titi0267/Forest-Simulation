@@ -1,9 +1,9 @@
 "use client";
 
-import axiosInstance from "@/utils/axios";
-import { useState, useEffect, useMemo, useCallback } from "react";
-import "@/app/globals.css";
-import Swal from "sweetalert2";
+import axiosInstance from '@/utils/axios';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import '@/app/globals.css';
+import Swal from 'sweetalert2';
 import {
   Table,
   TableHeader,
@@ -84,9 +84,14 @@ const Trees = () => {
     }
   };
 
-  useEffect(() => {
-    getForest();
-  }, []);
+    const useRefCaller = useRef(true);
+
+    useEffect(() => {
+        if (useRefCaller.current) {
+            useRefCaller.current = false;
+            getForest();
+        }
+    }, []);
 
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
@@ -113,22 +118,19 @@ const Trees = () => {
   const filteredItems = useMemo(() => {
     let filteredUsers = [...datas];
 
-    if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter((data) =>
-        data.species.toLowerCase().includes(filterValue.toLowerCase())
-      );
-    }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
-    ) {
-      filteredUsers = filteredUsers.filter((data) =>
-        Array.from(statusFilter).includes(data.status)
-      );
-    }
+        if (hasSearchFilter) {
+            filteredUsers = filteredUsers.filter((data) =>
+                data.species.toLowerCase().includes(filterValue.toLowerCase()),
+            );
+        }
+        if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+            filteredUsers = filteredUsers.filter((data) =>
+                Array.from(statusFilter).includes(data.status),
+            );
+        }
 
-    return filteredUsers;
-  }, [datas, filterValue, statusFilter]);
+        return filteredUsers;
+    }, [datas, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
