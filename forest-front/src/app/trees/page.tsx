@@ -1,7 +1,7 @@
 "use client";
 
 import axiosInstance from '@/utils/axios';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import '@/app/globals.css';
 import Swal from 'sweetalert2';
 import {
@@ -75,8 +75,13 @@ const Trees = () => {
         }
     };
 
+    const useRefCaller = useRef(true);
+
     useEffect(() => {
-        getForest();
+        if (useRefCaller.current) {
+            useRefCaller.current = false;
+            getForest();
+        }
     }, []);
 
     const [filterValue, setFilterValue] = useState("");
@@ -219,7 +224,7 @@ const Trees = () => {
         setPage(1)
     }, [])
 
-    const deleteSelectedKeys = (_selectedKeys : Selection) => {
+    const deleteSelectedKeys = (_selectedKeys: Selection) => {
         console.log(_selectedKeys);
     }
 
@@ -283,7 +288,7 @@ const Trees = () => {
                             color="danger"
                             isDisabled={(selectedKeys !== 'all') && (!selectedKeys.size)}
                             onPress={() => deleteSelectedKeys(selectedKeys)}
-                            endContent={<DeleteIcon/>}
+                            endContent={<DeleteIcon />}
                         >
                             Delete
                         </Button>
