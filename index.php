@@ -17,12 +17,21 @@ switch ($method) {
     case 'GET':
         if ($_SERVER['REQUEST_URI'] === "/tree/getforest/") {
             $trees = getforest();
+
             $data = ['success' => true, 'message' => $trees];
             echo json_encode($data);
         }
         if ($_SERVER['REQUEST_URI'] === "/tree/getStandtable/") {
             $standtable = getStandtable();
             $data = ['success' => true, 'message' => $standtable];
+            echo json_encode($data);
+        }
+        if (strpos($_SERVER['REQUEST_URI'], "/tree/getTreesInBlock/") !== false) {
+            $parts = explode("/", $_SERVER['REQUEST_URI']);
+            $blockX = $parts[3];
+            $blockY = $parts[4];
+            $trees = getTreesInBlock($blockX, $blockY);
+            $data = ['success' => true, 'message' => $trees];
             echo json_encode($data);
         }
         break;
@@ -75,6 +84,34 @@ function getforest()
                 "Volume" => $row["Volume"],
                 "status" => $row["status"]
             ]
+        );
+    }
+    return $trees;
+}
+
+function getTreesInBlock($blockX, $blockY) {
+    global $connection;
+    $sql = "SELECT * FROM trees WHERE BlockX = :blockX AND BlockY = :blockY";
+    $stmt = $connection->prepare($sql);
+    $stmt->bindParam(':blockX', $blockX);
+    $stmt->bindParam(':blockY', $blockY);
+    $stmt->execute();
+    
+    $trees = array();
+    while ($row = $stmt->fetch()) {
+        $trees[] = array(
+            "BlockX" => $row["BlockX"],
+            "BlockY" => $row["BlockY"],
+            "x" => $row["x"],
+            "y" => $row["y"],
+            "TreeNum" => $row["TreeNum"],
+            "species" => $row["species"],
+            "spgroup" => $row["spgroup"],
+            "Diameter" => $row["Diameter"],
+            "DiameterClass" => $row["DiameterClass"],
+            "Height" => $row["Height"],
+            "Volume" => $row["Volume"],
+            "status" => $row["status"]
         );
     }
     return $trees;
