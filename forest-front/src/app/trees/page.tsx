@@ -57,6 +57,8 @@ export type DataType = {
   BlockY: number;
   x: number;
   y: number;
+  realX: number;
+  realY: number;
   TreeNum: number;
   species: string;
   spgroup: string;

@@ -11,6 +11,20 @@ import Group4 from "@/components/Trees/group4";
 import Group5 from "@/components/Trees/group5";
 import Group6 from "@/components/Trees/group6";
 import Group7 from "@/components/Trees/group7";
+import Group1Cut from "@/components/Trees/group1cut";
+import Group2Cut from "@/components/Trees/group2cut";
+import Group3Cut from "@/components/Trees/group3cut";
+import Group4Cut from "@/components/Trees/group4cut";
+import Group5Cut from "@/components/Trees/group5cut";
+import Group6Cut from "@/components/Trees/group6cut";
+import Group7Cut from "@/components/Trees/group7cut";
+import Group1Victim from "@/components/Trees/group1victim";
+import Group2Victim from "@/components/Trees/group2victim";
+import Group3Victim from "@/components/Trees/group3victim";
+import Group4Victim from "@/components/Trees/group4victim";
+import Group5Victim from "@/components/Trees/group5victim";
+import Group6Victim from "@/components/Trees/group6victim";
+import Group7Victim from "@/components/Trees/group7victim";
 
 const Block = () => {
   const [datas, setData] = useState<DataType[]>([]);
@@ -77,7 +91,7 @@ const Block = () => {
   const renderTree = () => {
     const bl = [];
     return datas.map((data) => {
-      if (data.spgroup == "1")
+      if (data.spgroup == "1" && data.status == "Cut") {
         return (
           <div
             style={{
@@ -86,10 +100,15 @@ const Block = () => {
               top: `calc(${data.y}% - 24px)`,
             }}
           >
-            <Group1 />
+            <Group1Cut
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
           </div>
-        );
-      if (data.spgroup == "2")
+        )
+      } else if (data.spgroup == "1" && data.status == "Victim") {
         return (
           <div
             style={{
@@ -98,10 +117,15 @@ const Block = () => {
               top: `calc(${data.y}% - 24px)`,
             }}
           >
-            <Group2 />
+            <Group1Victim
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
           </div>
-        );
-      if (data.spgroup == "3")
+        )
+      } else if (data.spgroup == "1" && data.status == "Keep" || data.status == "None") {
         return (
           <div
             style={{
@@ -110,10 +134,18 @@ const Block = () => {
               top: `calc(${data.y}% - 24px)`,
             }}
           >
-            <Group3 />
+            <Group1
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}
+            />
           </div>
-        );
-      if (data.spgroup == "4")
+        )
+      }
+      
+      if (data.spgroup == "2" && data.status == "Cut") {
         return (
           <div
             style={{
@@ -122,10 +154,15 @@ const Block = () => {
               top: `calc(${data.y}% - 24px)`,
             }}
           >
-            <Group4 />
+            <Group2Cut
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
           </div>
         );
-      if (data.spgroup == "5")
+      } else if (data.spgroup == "2" && data.status == "Victim") {
         return (
           <div
             style={{
@@ -134,10 +171,15 @@ const Block = () => {
               top: `calc(${data.y}% - 24px)`,
             }}
           >
-            <Group5 />
+            <Group2Victim
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
           </div>
         );
-      if (data.spgroup == "6")
+      } else if (data.spgroup == "2" && data.status == "Keep" || data.status == "None") {
         return (
           <div
             style={{
@@ -146,10 +188,16 @@ const Block = () => {
               top: `calc(${data.y}% - 24px)`,
             }}
           >
-            <Group6 />
+            <Group2
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
           </div>
         );
-      if (data.spgroup == "7")
+      }
+      if (data.spgroup == "3" && data.status == "Cut") {
         return (
           <div
             style={{
@@ -158,9 +206,257 @@ const Block = () => {
               top: `calc(${data.y}% - 24px)`,
             }}
           >
-            <Group7 />
+            <Group3Cut
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
           </div>
         );
+      } else if (data.spgroup == "3" && data.status == "Victim") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group3Victim
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "3" && data.status == "Keep" || data.status == "None") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group3
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      }
+      if (data.spgroup == "4" && data.status == "Cut") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group4Cut
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "4" && data.status == "Victim") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group4Victim
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "4" && data.status == "Keep" || data.status == "None") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group4
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      }
+      if (data.spgroup == "5" && data.status == "Cut") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group5Cut
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "5" && data.status == "Victim") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group5Victim
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "5" && data.status == "Keep" || data.status == "None") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group5
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      }
+      if (data.spgroup == "6" && data.status == "Cut") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group6Cut
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "6" && data.status == "Victim") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group6Victim
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "6" && data.status == "Keep" || data.status == "None") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group6
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      }
+      if (data.spgroup == "7" && data.status == "Cut") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group7Cut
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "7" && data.status == "Victim") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group7Victim
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      } else if (data.spgroup == "7" && data.status == "Keep" || data.status == "None") {
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: `calc(${data.x}% - 12px)`,
+              top: `calc(${data.y}% - 24px)`,
+            }}
+          >
+            <Group7
+              x={data.x}
+              y={data.y}
+              realX={data.realX}
+              realY={data.realY}
+              status={data.status}/>
+          </div>
+        );
+      }
     });
   };
   return (

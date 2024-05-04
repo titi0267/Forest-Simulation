@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
+const Group1Cut = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   const handleHover = () => {
-    console.log('---------Group1 tree hovered!---------');
+    console.log('---------Group1 Cut tree hovered!---------');
     console.log("x: ", x);
     console.log("y: ", y);
     console.log("realX: ", realX);
@@ -82,9 +82,7 @@ const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(53,144,36)", //green lighter
-            // fill: "rgb(247, 159, 45)", //orange lighter
-            // fill: "rgb(242, 55, 34)", //orange lighter
+            fill: "rgb(255, 13, 13)", //red lighter
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -100,9 +98,7 @@ const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(46,124,33)", // green darker
-            // fill: "rgb(242, 149, 29)", // orange darker
-            // fill: "rgb(199, 45, 28)", // red darker
+            fill: "rgb(255, 0, 0)", // red darker
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -114,4 +110,4 @@ const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   );
 };
 
-export default Group1;
+export default Group1Cut;

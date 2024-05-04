@@ -115,6 +115,8 @@ function getTreesInBlock($blockX, $blockY) {
             "BlockY" => $row["BlockY"],
             "x" => $row["x"],
             "y" => $row["y"],
+            "realX" => $row["RealX"],
+            "realY" => $row["RealY"],
             "TreeNum" => $row["TreeNum"],
             "species" => $row["species"],
             "spgroup" => $row["spgroup"],

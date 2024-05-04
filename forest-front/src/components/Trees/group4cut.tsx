@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
+const Group4Cut = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   const handleHover = () => {
-    console.log('---------Group1 tree hovered!---------');
+    console.log('---------Group4 Cut tree hovered!---------');
     console.log("x: ", x);
     console.log("y: ", y);
     console.log("realX: ", realX);
@@ -38,43 +38,8 @@ const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
         }}
         transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"
       >
-        <rect
-          x="41.04"
-          y="63.09"
-          rx="0"
-          ry="0"
-          width="7.91"
-          height="26.91"
-          style={{
-            stroke: "none",
-            strokeWidth: 1,
-            strokeDasharray: "none",
-            strokeLinecap: "butt",
-            strokeLinejoin: "miter",
-            strokeMiterlimit: 10,
-            fill: "rgb(122,8,8)",
-            fillRule: "nonzero",
-            opacity: 1,
-          }}
-          transform=" matrix(1 0 0 1 0 0) "
-        />
-        <polygon
-          points="44.04,69.09 48.96,69.09 48.96,63.09 41.04,63.09 41.04,90 44.04,90 "
-          style={{
-            stroke: "none",
-            strokeWidth: 1,
-            strokeDasharray: "none",
-            strokeLinecap: "butt",
-            strokeLinejoin: "miter",
-            strokeMiterlimit: 10,
-            fill: "rgb(96,7,7)",
-            fillRule: "nonzero",
-            opacity: 1,
-          }}
-          transform="  matrix(1 0 0 1 0 0) "
-        />
         <path
-          d="M 61.355 67.042 H 28.646 c -9.191 0 -16.668 -7.477 -16.668 -16.667 c 0 -4.903 2.124 -9.446 5.723 -12.567 c -0.749 -1.913 -1.135 -3.955 -1.135 -6.045 c 0 -7.046 4.33 -13.133 10.68 -15.55 C 28.064 7.137 35.714 0 45 0 c 9.285 0 16.936 7.137 17.755 16.213 c 6.349 2.417 10.679 8.505 10.679 15.55 c 0 2.09 -0.386 4.131 -1.135 6.045 c 3.599 3.121 5.723 7.664 5.723 12.567 C 78.022 59.566 70.546 67.042 61.355 67.042 z"
+          d="M 78.771 68.941 L 59.992 33.5 h 5.392 c 0.554 0 1.063 -0.305 1.323 -0.793 s 0.231 -1.08 -0.076 -1.541 l -20.384 -30.5 c -0.557 -0.833 -1.938 -0.833 -2.494 0 l -20.384 30.5 c -0.308 0.46 -0.337 1.052 -0.076 1.541 c 0.261 0.488 0.769 0.793 1.323 0.793 h 5.391 L 11.229 68.941 c -0.247 0.465 -0.231 1.024 0.04 1.476 s 0.759 0.727 1.285 0.727 h 64.891 c 0.526 0 1.014 -0.275 1.285 -0.727 S 79.018 69.406 78.771 68.941 z"
           style={{
             stroke: "none",
             strokeWidth: 1,
@@ -82,9 +47,7 @@ const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(53,144,36)", //green lighter
-            // fill: "rgb(247, 159, 45)", //orange lighter
-            // fill: "rgb(242, 55, 34)", //orange lighter
+            fill: "rgb(255, 20, 20)", // light light red
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -92,7 +55,7 @@ const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
           stroke-linecap="round"
         />
         <path
-          d="M 41.086 65.042 c -9.985 0 -18.108 -7.253 -18.108 -16.17 c 0 -4.757 2.307 -9.164 6.218 -12.192 c -0.813 -1.856 -1.233 -3.837 -1.233 -5.864 c 0 -6.836 4.704 -12.741 11.602 -15.086 C 40.228 9.164 45.02 3.648 51.595 1.265 C 49.554 0.45 47.329 0 45 0 c -9.286 0 -16.936 7.137 -17.755 16.213 c -6.35 2.417 -10.68 8.505 -10.68 15.55 c 0 2.09 0.387 4.131 1.135 6.045 c -3.599 3.121 -5.723 7.664 -5.723 12.567 c 0 9.191 7.477 16.667 16.668 16.667 h 32.709 c 2.86 0 5.554 -0.725 7.908 -2 H 41.086 z"
+          d="M 45 90 c -0.829 0 -1.5 -0.672 -1.5 -1.5 V 32.633 c 0 -0.829 0.671 -1.5 1.5 -1.5 s 1.5 0.671 1.5 1.5 V 88.5 C 46.5 89.328 45.829 90 45 90 z"
           style={{
             stroke: "none",
             strokeWidth: 1,
@@ -100,9 +63,39 @@ const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(46,124,33)", // green darker
-            // fill: "rgb(242, 149, 29)", // orange darker
-            // fill: "rgb(199, 45, 28)", // red darker
+            fill: "rgb(255, 13, 13)", // light light darker red
+            fillRule: "nonzero",
+            opacity: 1,
+          }}
+          transform=" matrix(1 0 0 1 0 0) "
+          stroke-linecap="round"
+        />
+        <path
+          d="M 45 56.186 c -0.384 0 -0.768 -0.146 -1.061 -0.439 c -0.586 -0.586 -0.586 -1.535 0 -2.121 l 6.272 -6.272 c 0.586 -0.586 1.535 -0.586 2.121 0 s 0.586 1.535 0 2.121 l -6.272 6.272 C 45.768 56.039 45.384 56.186 45 56.186 z"
+          style={{
+            stroke: "none",
+            strokeWidth: 1,
+            strokeDasharray: "none",
+            strokeLinecap: "butt",
+            strokeLinejoin: "miter",
+            strokeMiterlimit: 10,
+            fill: "rgb(255, 13, 13)", // light light darker red
+            fillRule: "nonzero",
+            opacity: 1,
+          }}
+          transform=" matrix(1 0 0 1 0 0) "
+          stroke-linecap="round"
+        />
+        <path
+          d="M 45 48.998 c -0.384 0 -0.768 -0.146 -1.061 -0.439 l -6.273 -6.273 c -0.586 -0.585 -0.586 -1.536 0 -2.121 c 0.586 -0.586 1.535 -0.586 2.121 0 l 6.273 6.273 c 0.586 0.586 0.586 1.535 0 2.121 C 45.768 48.852 45.384 48.998 45 48.998 z"
+          style={{
+            stroke: "none",
+            strokeWidth: 1,
+            strokeDasharray: "none",
+            strokeLinecap: "butt",
+            strokeLinejoin: "miter",
+            strokeMiterlimit: 10,
+            fill: "rgb(255, 13, 13)", // light light darker red
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -114,4 +107,4 @@ const Group1 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   );
 };
 
-export default Group1;
+export default Group4Cut;

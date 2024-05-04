@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Group5 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
+const Group5Victim = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   const handleHover = () => {
-    console.log('---------Group5 tree hovered!---------');
+    console.log('---------Group5 Victim tree hovered!---------');
     console.log("x: ", x);
     console.log("y: ", y);
     console.log("realX: ", realX);
@@ -63,9 +63,7 @@ const Group5 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(86,148,65)", // green
-            // fill: "rgb(240, 119, 14)", // orange
-            // fill: "rgb(240, 25, 14)", // red
+            fill: "rgb(240, 119, 14)", // orange
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -77,4 +75,4 @@ const Group5 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   );
 };
 
-export default Group5;
+export default Group5Victim;

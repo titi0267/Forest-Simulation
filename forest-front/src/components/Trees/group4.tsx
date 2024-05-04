@@ -1,4 +1,17 @@
-const Group4 = () => {
+import React from 'react';
+
+const Group4 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
+  const handleHover = () => {
+    console.log('---------Group4 tree hovered!---------');
+    console.log("x: ", x);
+    console.log("y: ", y);
+    console.log("realX: ", realX);
+    console.log("realY: ", realY);
+    console.log("status: ", status);
+    console.log("------------------");
+    // Add any other logic you'd like to perform on hover
+  };
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,6 +21,7 @@ const Group4 = () => {
       height="24"
       viewBox="0 0 256 256"
       xmlSpace="preserve"
+      onMouseEnter={handleHover} // Add this line
     >
       <defs></defs>
       <g
@@ -33,7 +47,9 @@ const Group4 = () => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(28,165,111)",
+            fill: "rgb(28,165,111)", // light light green
+            // fill: "rgb(227, 134, 20)", // light light orange
+            // fill: "rgb(230, 50, 18)", // light light red
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -49,7 +65,9 @@ const Group4 = () => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(23,139,93)",
+            fill: "rgb(23,139,93)", // light light darker green
+            // fill: "rgb(224, 125, 2)", // light light darker orange
+            // fill: "rgb(232, 37, 2)", // light light darker red
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -65,7 +83,9 @@ const Group4 = () => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(23,139,93)",
+            fill: "rgb(23,139,93)", // light light darker green
+            // fill: "rgb(224, 125, 2)", // light light darker orange
+            // fill: "rgb(232, 37, 2)", // light light darker red
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -81,7 +101,9 @@ const Group4 = () => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(23,139,93)",
+            fill: "rgb(23,139,93)", // light light darker green
+            // fill: "rgb(224, 125, 2)", // light light darker orange
+            // fill: "rgb(232, 37, 2)", // light light darker red
             fillRule: "nonzero",
             opacity: 1,
           }}

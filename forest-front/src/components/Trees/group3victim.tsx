@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Group3 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
+const Group3Victim = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   const handleHover = () => {
-    console.log('---------Group3 tree hovered!---------');
+    console.log('---------Group3 Victim tree hovered!---------');
     console.log("x: ", x);
     console.log("y: ", y);
     console.log("realX: ", realX);
@@ -63,9 +63,7 @@ const Group3 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(86,148,65)", // light green
-            // fill: "rgb(227, 119, 25)", // light orange
-            // fill: "rgb(214, 42, 19)", // light red
+            fill: "rgb(227, 119, 25)", // light orange
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -77,4 +75,4 @@ const Group3 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   );
 };
 
-export default Group3;
+export default Group3Victim;

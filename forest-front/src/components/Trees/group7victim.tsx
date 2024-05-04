@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
+const Group7Victim = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   const handleHover = () => {
-    console.log('---------Group7 tree hovered!---------');
+    console.log('---------Group7 Victim tree hovered!------------------');
     console.log("x: ", x);
     console.log("y: ", y);
     console.log("realX: ", realX);
@@ -46,9 +46,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(104,143,44)", // green 
-            // fill: "rgb(245, 91, 20)", // orange 
-            // fill: "rgb(247, 22, 10)", // red 
+            fill: "rgb(245, 91, 20)", // orange 
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -128,9 +126,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(118,161,52)", // light green
-            // fill: "rgb(242, 96, 29)", // light orange
-            // fill: "rgb(250, 43, 32)", // light red
+            fill: "rgb(242, 96, 29)", // light orange
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -146,9 +142,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(132,179,61)", // lighter green
-            // fill: "rgb(247, 107, 42)", // lighter orange
-            // fill: "rgb(247, 52, 42)", // lighter red
+            fill: "rgb(247, 107, 42)", // lighter orange
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -164,9 +158,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(132,179,61)", // lighter green
-            // fill: "rgb(247, 107, 42)", // lighter orange
-            // fill: "rgb(247, 52, 42)", // lighter red
+            fill: "rgb(247, 107, 42)", // lighter orange
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -178,4 +170,4 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
   );
 };
 
-export default Group7;
+export default Group7Victim;
