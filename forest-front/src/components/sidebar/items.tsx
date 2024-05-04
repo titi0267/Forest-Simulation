@@ -13,13 +13,13 @@ export const items: SidebarItem[] = [
     key: "trees",
     href: "/trees",
     icon: "pepicons-pencil:tree",
-    title: "Trees",
+    title: "List of Trees",
   },
   {
     key: "infoTrees",
     href: "/infoTrees",
     icon: "material-symbols:info-outline",
-    title: "Trees Informations",
+    title: "Tree's Informations",
   },
   {
     key: "block",

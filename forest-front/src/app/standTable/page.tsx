@@ -1,7 +1,7 @@
 "use client";
 
 import axiosInstance from '@/utils/axios';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ColumnGroup } from 'primereact/columngroup';
@@ -36,21 +36,20 @@ const StandTable = () => {
         { groupName: 'Others', volume: [], num: [] },
     ]);
 
+    const shouldLog = useRef(true);
+
     useEffect(() => {
         const getStandtable = async () => {
             try {
-                const response = await axiosInstance.get('/getStandtable/');
+                const response = await axiosInstance.get('/getStandtable/')
+                console.log(response);
                 setStable(prevStable => {
                     const updatedStable = [...prevStable];
                     response.data.message.forEach((item: DataType) => {
                         const index = updatedStable.findIndex(group => group.groupName === item.GroupName);
                         if (index !== -1) {
-                            if (updatedStable[index].volume.length !== 5) {
-                                updatedStable[index].volume.push(item.Volume);
-                            }
-                            if (updatedStable[index].num.length !== 5) {
-                                updatedStable[index].num.push(item.Num);
-                            }
+                            updatedStable[index].volume.push(item.Volume);
+                            updatedStable[index].num.push(item.Num);
                         }
                     });
                     return updatedStable;
@@ -59,7 +58,10 @@ const StandTable = () => {
                 console.error('Erreur:', error);
             }
         };
-        getStandtable();
+        if (shouldLog.current) {
+            shouldLog.current = false;
+            getStandtable();
+        }
     }, []);
 
     const headerGroup = (

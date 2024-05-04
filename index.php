@@ -17,7 +17,6 @@ switch ($method) {
     case 'GET':
         if ($_SERVER['REQUEST_URI'] === "/tree/getforest/") {
             $trees = getforest();
-
             $data = ['success' => true, 'message' => $trees];
             echo json_encode($data);
         }
@@ -36,6 +35,10 @@ switch ($method) {
         }
         break;
 }
+
+if (array_key_exists('calculate', $_POST)) { 
+    calculate_volume();
+} 
 
 function getStandtable()
 {
@@ -75,6 +78,8 @@ function getforest()
                 "BlockY" => $row["BlockY"],
                 "x" => $row["x"],
                 "y" => $row["y"],
+                "RealX" => $row["RealX"],
+                "RealY" => $row["RealY"],
                 "TreeNum" => $row["TreeNum"],
                 "species" => $row["species"],
                 "spgroup" => $row["spgroup"],
@@ -82,7 +87,13 @@ function getforest()
                 "DiameterClass" => $row["DiameterClass"],
                 "Height" => $row["Height"],
                 "Volume" => $row["Volume"],
-                "status" => $row["status"]
+                "status" => $row["status"],
+                "PROD" => $row["PROD"],
+                "CutAngle" => $row["CutAngle"],
+                "DamageSTEM" => $row["DamageSTEM"],
+                "DamageCROWN" => $row["DamageCROWN"],
+                "GrowthD30" => $row["GrowthD30"],
+                "Volume30" => $row["Volume30"],
             ]
         );
     }
@@ -117,6 +128,23 @@ function getTreesInBlock($blockX, $blockY) {
     return $trees;
 }
 
+function insert_stand_table_to_database($STAND_TABLE)
+{
+    global $connection;
+
+    foreach ($STAND_TABLE as $groupName => $diameterClasses) {
+        foreach ($diameterClasses as $diameter => $data) {
+            $volume = $data["Volume"];
+            $num = $data["Num"];
+            $sqlValues[] = "('$groupName', '$diameter', '$volume', '$num')";
+        }
+    }
+    $sqlValuesString = implode(", ", $sqlValues);
+    $sql = "INSERT INTO `StandTable` (`GroupName`, `Diameter`, `Volume`, `Num`)
+                VALUES $sqlValuesString";
+    $connection->query($sql);
+}
+
 function create_stand_table()
 {
     $STAND_TABLE = [];
@@ -144,23 +172,6 @@ function create_stand_table()
         $STAND_TABLE[$group[$speciesGroup]][$diameterClass]["Num"] += 1;
     }
     insert_stand_table_to_database($STAND_TABLE);
-}
-
-function insert_stand_table_to_database($STAND_TABLE)
-{
-    global $connection;
-
-    foreach ($STAND_TABLE as $groupName => $diameterClasses) {
-        foreach ($diameterClasses as $diameter => $data) {
-            $volume = $data["Volume"];
-            $num = $data["Num"];
-            $sqlValues[] = "('$groupName', '$diameter', '$volume', '$num')";
-        }
-    }
-    $sqlValuesString = implode(", ", $sqlValues);
-    $sql = "INSERT INTO `StandTable` (`GroupName`, `Diameter`, `Volume`, `Num`)
-                VALUES $sqlValuesString";
-    $connection->query($sql);
 }
 
 $TREES = array();
@@ -209,7 +220,114 @@ function generate()
         }
     }
     create_stand_table();
+    // calculate_volume();
 }
+
+function victim_due_to_crown($cutting_angle, $height, $x0, $y0)
+{
+    $x = ($height + 5) * sin($cutting_angle / 180 * 3.142);
+    $x1 = $x + $x0;
+
+    $y = ($height + 5) * cos($cutting_angle / 180 * 3.142);
+    $y1 = $y0 - $y;
+
+    global $connection;
+    $sql = "SELECT id, RealX, RealY, Volume FROM trees WHERE status != 'Cut' AND status != 'Victim' AND SQRT(POWER($x1 - RealX, 2) + POWER($y1 - RealY, 2)) <= 5";
+    $result = $connection->query($sql);
+    if (!$result) {
+        die("Invalid query: " . $connection->errorInfo());
+    }
+
+    $totalVolume = 0;
+    $updateSQL = [];
+
+    while ($row = $result->fetch()) {
+        $id = $row["id"];
+        $volume = $row["Volume"];
+        $totalVolume += $volume;
+        $updateSQL[] = "UPDATE `trees` SET `status`='Victim',`DamageCROWN`='$volume' WHERE id='$id'";
+    }
+    if (!empty($updateSQL)) {
+        $combinedUpdateSQL = implode("; ", $updateSQL);
+        $connection->query($combinedUpdateSQL);
+    }
+    return $totalVolume;
+}
+
+function calculate_volume()
+{
+    global $connection;
+    $sql = "SELECT id, Height, RealX, RealY FROM trees WHERE trees.status='Cut'";
+    $result = $connection->query($sql);
+    if (!$result) {
+        die("Invalid query: " . $connection->errorInfo());
+    }
+    $updateSQL = [];
+
+    while ($row = $result->fetch()) {
+        $id = $row["id"];
+        $cutting_angle = rand(0, 360);
+        $height = $row["Height"];
+        $RealX = $row["RealX"];
+        $RealY = $row["RealY"];
+        $damageCrown = victim_due_to_crown($cutting_angle, $height, $RealX, $RealY);
+        if ($damageCrown != 0) {
+            $updateSQL[] = "UPDATE `trees` SET `CutAngle`='$cutting_angle', `DamageCROWN`='$damageCrown' WHERE id='$id'";
+            break;
+        }
+    }
+    if (!empty($updateSQL)) {
+        $combinedUpdateSQL = implode("; ", $updateSQL);
+        $connection->query($combinedUpdateSQL);
+    }
+}
+
+function get_diameter_increment($diameter)
+{
+    $diameterClassMapping = [
+        [5, 15, 0.4],
+        [15, 30, 0.6],
+        [30, 45, 0.5],
+        [45, 60, 0.5],
+        [60, 250, 0.7],
+    ];
+
+    foreach ($diameterClassMapping as $mapping) {
+        if ($diameter >= $mapping[0] && $diameter < $mapping[1]) {
+            return $mapping[2];
+        }
+    }
+}
+
+function get_diameter_after_30_years($diameter0)
+{
+    $diameter30 = $diameter0;
+
+    for ($i = 0; $i < 30; $i++) {
+        $increment = get_diameter_increment($diameter30);
+        $diameter30 += $increment;
+    }
+    return $diameter30;
+}
+
+function get_volume_after_30_years($diameter30, $group)
+{
+    if (in_array($group, [1, 2, 3, 5])) {
+        if ($diameter30 < 15) {
+            $volume30 = 0.022 + 3.4 * ($diameter30 ** 2);
+        } else {
+            $volume30 = (-0.0971) + 9.503 * ($diameter30 ** 2);
+        }
+    } else {
+        if ($diameter30 < 30) {
+            $volume30 = 0.03 + 2.8 * ($diameter30 ** 2);
+        } else {
+            $volume30 = (-0.331) + 6.694 * ($diameter30 ** 2);
+        }
+    }
+    return $volume30;
+}
+
 function create_tree($blockX, $blockY, $SPECIES_TABLE, $SPECIES_GROUP)
 {
     global $connection;
@@ -243,24 +361,33 @@ function create_tree($blockX, $blockY, $SPECIES_TABLE, $SPECIES_GROUP)
                 $locationy = rand(1, 99);
                 $x = $locationx;
                 $y = $locationy;
-                // $x = ($blockX - 1) * 100 + $locationx;
-                // $y = ($blockY - 1) * 100 + $locationy;
+                $realx = ($blockX - 1) * 100 + $locationx;
+                $realy = ($blockY - 1) * 100 + $locationy;
                 $treeId = "T" . ($blockX < 10 ? "0" . strval($blockX) : strval($blockX)) . ($blockY < 10 ? "0" . strval($blockY) : strval($blockY)) . ($x < 10 ? "0" . strval($x) : strval($x)) . ($y < 10 ? "0" . strval($y) : strval($y));
                 $volume = 3.142 * ($diameter / 200) ** 2 * $height * 0.50;
-                $status = "";
+                $status = "None";
                 if (in_array($group, [1, 2, 3, 5])) {
                     $status = ($diameter < 45) ? "Keep" : "Cut";
                 }
-                $sqlValues[] = "('$blockX', '$blockY', '$x', '$y', '$treeId', '$species', '$group', '" . round($diameter, 1) . "', '$diameterClass', '" . round($height, 1) . "', '$volume', '$status')";
+                $uuid = guidv4();
+                $PROD = (float) 0;
+                if ($status == "Cut") {
+                    $PROD = $volume;
+                }
+                $diameter30 = get_diameter_after_30_years($diameter);
+                $volume30   = get_volume_after_30_years($diameter30 / 100, $group);
+                $zero = 0;
+                $sqlValues[] = "('$uuid', '$blockX', '$blockY', '$x', '$y', '$realx', '$realy', '$treeId', '$species', '$group', '" . round($diameter, 1) . "', '$diameterClass', '" . round($height, 1) . "', '$volume', '$status', '$PROD', '$zero', '$zero', '$zero', '$diameter30', '$volume30')";
                 // array_push($TREES, ["x" => $x, "y" => $y, "species" => $species, "diameter" => round($diameter, 2)]);
             }
         }
     }
     $sqlValuesString = implode(", ", $sqlValues);
-    $sql = "INSERT INTO `trees` (`BlockX`, `BlockY`, `x`, `y`, `TreeNum`, `species`, `spgroup`, `Diameter`, `DiameterClass`, `Height`, `Volume`, `status`)
+    $sql = "INSERT INTO `trees` (`id`, `BlockX`, `BlockY`, `x`, `y`, `RealX`, `RealY`, `TreeNum`, `species`, `spgroup`, `Diameter`, `DiameterClass`, `Height`, `Volume`, `status`, `PROD`, `CutAngle`, `DamageSTEM`, `DamageCROWN`, `GrowthD30`, `Volume30`)
                 VALUES $sqlValuesString";
     $connection->query($sql);
 }
+
 function clear_trees()
 {
     global $connection;
@@ -275,5 +402,14 @@ function clear_trees()
     if (!$result) {
         die("Invalid query: " . $connection->errorInfo());
     }
+}
+
+function guidv4($data = null)
+{
+    $data = $data ?? random_bytes(16);
+    assert(strlen($data) == 16);
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
 ?>

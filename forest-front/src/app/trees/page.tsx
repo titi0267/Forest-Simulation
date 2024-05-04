@@ -38,6 +38,8 @@ import { capitalize } from "./utils";
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Keep: "success",
   Cut: "danger",
+  Victim: "warning",
+  None: "primary"
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -63,6 +65,12 @@ export type DataType = {
   Height: number;
   Volume: number;
   status: string;
+  PROD: number;
+  CutAngle: number;
+  DamageSTEM: number;
+  DamageCROWN: number;
+  GrowthD30: number;
+  Volume30: number;
 };
 
 const Trees = () => {
@@ -84,14 +92,14 @@ const Trees = () => {
     }
   };
 
-    const useRefCaller = useRef(true);
+  const useRefCaller = useRef(true);
 
-    useEffect(() => {
-        if (useRefCaller.current) {
-            useRefCaller.current = false;
-            getForest();
-        }
-    }, []);
+  useEffect(() => {
+    if (useRefCaller.current) {
+      useRefCaller.current = false;
+      getForest();
+    }
+  }, []);
 
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
@@ -118,19 +126,19 @@ const Trees = () => {
   const filteredItems = useMemo(() => {
     let filteredUsers = [...datas];
 
-        if (hasSearchFilter) {
-            filteredUsers = filteredUsers.filter((data) =>
-                data.species.toLowerCase().includes(filterValue.toLowerCase()),
-            );
-        }
-        if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-            filteredUsers = filteredUsers.filter((data) =>
-                Array.from(statusFilter).includes(data.status),
-            );
-        }
+    if (hasSearchFilter) {
+      filteredUsers = filteredUsers.filter((data) =>
+        data.species.toLowerCase().includes(filterValue.toLowerCase()),
+      );
+    }
+    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+      filteredUsers = filteredUsers.filter((data) =>
+        Array.from(statusFilter).includes(data.status),
+      );
+    }
 
-        return filteredUsers;
-    }, [datas, filterValue, statusFilter]);
+    return filteredUsers;
+  }, [datas, filterValue, statusFilter]);
 
   const pages = Math.ceil(filteredItems.length / rowsPerPage);
 

@@ -172,7 +172,6 @@ const Block = () => {
         justifyContent: "center",
         display: "flex",
         flexDirection: "column",
-        background: `linear-gradient(to ${whereTo}, #556B2F 0%, #8B4513 100%)`,
         borderRadius: "10px",
       }}
     >
