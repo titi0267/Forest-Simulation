@@ -1,0 +1,26 @@
+.singleBlock {
+  &:hover {
+    cursor: pointer;
+    background-color: grey;
+  }
+}
+
+.zoomOnBlock {
+  width: 100%;
+  height: 100%;
+}
+
+.blockZoomedIn {
+  &:hover {
+    cursor: default !important;
+    background-color: white !important;
+  }
+  border: 0 !important;
+  border-radius: 10px;
+}
+
+.hideOtherBlocks {
+  transition: width 0.5s ease, height 0.5s ease !important;
+  width: 0% !important;
+  height: 0% !important;
+}

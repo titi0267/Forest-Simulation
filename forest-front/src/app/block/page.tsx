@@ -25,6 +25,8 @@ import Group4Victim from "@/components/Trees/group4victim";
 import Group5Victim from "@/components/Trees/group5victim";
 import Group6Victim from "@/components/Trees/group6victim";
 import Group7Victim from "@/components/Trees/group7victim";
+import styles from "./styles.module.scss";
+import { cn } from "@/components/sidebar/cn";
 
 const Block = () => {
   const [datas, setData] = useState<DataType[]>([]);
@@ -51,51 +53,34 @@ const Block = () => {
     }
   };
 
-  const renderGrid = () => {
-    const gridMap = [];
-    for (let i = 1; i < 5; i++) {
-      gridMap.push(
-        <div
-          style={{
-            width: "1px",
-            height: "100%",
-            position: "absolute",
-            left: `calc(${i} * 20%)`,
-            top: 0,
-            backgroundColor: "#80808070",
-          }}
-        ></div>
-      );
-    }
-    for (let i = 1; i < 5; i++) {
-      gridMap.push(
-        <div
-          style={{
-            width: "100%",
-            height: "1px",
-            position: "absolute",
-            left: 0,
-            top: `calc(${i} * 20%)`,
-            backgroundColor: "#80808070",
-          }}
-        ></div>
-      );
-    }
-    return gridMap;
-  };
-
   useEffect(() => {
     getTreesInBlock(blockX, blockY);
   }, [blockX, blockY]);
 
-  const renderTree = () => {
+  const renderTree = (x: number, y: number) => {
     const bl = [];
+    console.log("render Tree");
     return datas.map((data) => {
-      if (data.spgroup == "1" && data.status == "Cut") {
+      if (
+        !(
+          (data.x < x * 20 || data.x > (x + 1) * 20) &&
+          (data.y < y * 20 || data.y > (y + 1) * 20)
+        )
+      )
+        return null;
+      if (
+        data.spgroup == "1" &&
+        data.status == "Cut" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                clickOnBlock.x == x && clickOnBlock.y == y ? "block" : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -105,14 +90,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
-        )
-      } else if (data.spgroup == "1" && data.status == "Victim") {
+        );
+      } else if (
+        data.spgroup == "1" &&
+        data.status == "Victim" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -122,14 +119,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
-        )
-      } else if (data.spgroup == "1" && data.status == "Keep" || data.status == "None") {
+        );
+      } else if (
+        ((data.spgroup == "1" && data.status == "Keep") ||
+          data.status == "None") &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -142,14 +151,25 @@ const Block = () => {
               status={data.status}
             />
           </div>
-        )
+        );
       }
-      
-      if (data.spgroup == "2" && data.status == "Cut") {
+
+      if (
+        data.spgroup == "2" &&
+        data.status == "Cut" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -159,14 +179,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "2" && data.status == "Victim") {
+      } else if (
+        data.spgroup == "2" &&
+        data.status == "Victim" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -176,14 +208,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "2" && data.status == "Keep" || data.status == "None") {
+      } else if (
+        ((data.spgroup == "2" && data.status == "Keep") ||
+          data.status == "None") &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -193,15 +237,27 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
       }
-      if (data.spgroup == "3" && data.status == "Cut") {
+      if (
+        data.spgroup == "3" &&
+        data.status == "Cut" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -211,14 +267,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "3" && data.status == "Victim") {
+      } else if (
+        data.spgroup == "3" &&
+        data.status == "Victim" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -228,14 +296,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "3" && data.status == "Keep" || data.status == "None") {
+      } else if (
+        ((data.spgroup == "3" && data.status == "Keep") ||
+          data.status == "None") &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -245,15 +325,27 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
       }
-      if (data.spgroup == "4" && data.status == "Cut") {
+      if (
+        data.spgroup == "4" &&
+        data.status == "Cut" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -263,14 +355,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "4" && data.status == "Victim") {
+      } else if (
+        data.spgroup == "4" &&
+        data.status == "Victim" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -280,14 +384,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "4" && data.status == "Keep" || data.status == "None") {
+      } else if (
+        ((data.spgroup == "4" && data.status == "Keep") ||
+          data.status == "None") &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -297,15 +413,27 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
       }
-      if (data.spgroup == "5" && data.status == "Cut") {
+      if (
+        data.spgroup == "5" &&
+        data.status == "Cut" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -315,14 +443,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "5" && data.status == "Victim") {
+      } else if (
+        data.spgroup == "5" &&
+        data.status == "Victim" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -332,14 +472,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "5" && data.status == "Keep" || data.status == "None") {
+      } else if (
+        ((data.spgroup == "5" && data.status == "Keep") ||
+          data.status == "None") &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -349,15 +501,27 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
       }
-      if (data.spgroup == "6" && data.status == "Cut") {
+      if (
+        data.spgroup == "6" &&
+        data.status == "Cut" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -367,14 +531,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "6" && data.status == "Victim") {
+      } else if (
+        data.spgroup == "6" &&
+        data.status == "Victim" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -384,14 +560,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "6" && data.status == "Keep" || data.status == "None") {
+      } else if (
+        ((data.spgroup == "6" && data.status == "Keep") ||
+          data.status == "None") &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -401,15 +589,27 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
       }
-      if (data.spgroup == "7" && data.status == "Cut") {
+      if (
+        data.spgroup == "7" &&
+        data.status == "Cut" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -419,14 +619,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "7" && data.status == "Victim") {
+      } else if (
+        data.spgroup == "7" &&
+        data.status == "Victim" &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -436,14 +648,26 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
-      } else if (data.spgroup == "7" && data.status == "Keep" || data.status == "None") {
+      } else if (
+        ((data.spgroup == "7" && data.status == "Keep") ||
+          data.status == "None") &&
+        (data.x < x * 20 || data.x > (x + 1) * 20) &&
+        (data.y < y * 20 || data.y > (y + 1) * 20)
+      ) {
         return (
           <div
             style={{
               position: "absolute",
+              display:
+                (clickOnBlock.x == x && clickOnBlock.y == y) ||
+                (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+                  ? "block"
+                  : "none",
+              pointerEvents: "none",
               left: `calc(${data.x}% - 12px)`,
               top: `calc(${data.y}% - 24px)`,
             }}
@@ -453,12 +677,139 @@ const Block = () => {
               y={data.y}
               realX={data.realX}
               realY={data.realY}
-              status={data.status}/>
+              status={data.status}
+            />
           </div>
         );
       }
     });
   };
+
+  const [clickOnBlock, setClickOnBlock] = useState<{
+    x: number | undefined;
+    y: number | undefined;
+  }>({ x: undefined, y: undefined });
+
+  useEffect(() => {
+    if (clickOnBlock.x && clickOnBlock.y) {
+    }
+  }, [clickOnBlock]);
+
+  const renderXBlock = (y: number) => {
+    let blocksOnMapX: JSX.Element[] = [];
+
+    for (let x = 0; x < 5; x++)
+      blocksOnMapX.push(
+        <div
+          onClick={() => {
+            setClickOnBlock({ x: x, y: y });
+          }}
+          className={cn(
+            styles.singleBlock,
+            (clickOnBlock.x == x && clickOnBlock.y == y) ||
+              (clickOnBlock.x == undefined && clickOnBlock.y == undefined)
+              ? styles.zoomOnBlock
+              : styles.hideOtherBlocks,
+            clickOnBlock.x == x && clickOnBlock.y == y
+              ? styles.blockZoomedIn
+              : null
+          )}
+          style={{
+            width: "100%",
+            height: "100%",
+            borderLeft: x == 0 ? "0px" : "1px solid grey",
+            borderBottom: y == 4 ? "0px" : "1px solid grey",
+          }}
+        >
+          {renderTree(x, y)}
+          {y == 0 && (clickOnBlock.x == undefined || clickOnBlock.x == x) && (
+            <p
+              style={{
+                position: "relative",
+                top: "-30px",
+                left: "-10px",
+              }}
+            >
+              {x * 20}
+            </p>
+          )}
+        </div>
+      );
+    return blocksOnMapX;
+  };
+  const renderYBlock = () => {
+    let blocksOnMapY: JSX.Element[] = [];
+
+    for (let i = 0; i < 5; i++) {
+      blocksOnMapY.push(
+        <div
+          className={cn(
+            clickOnBlock.y == i || clickOnBlock.y == undefined
+              ? styles.zoomOnBlock
+              : styles.hideOtherBlocks
+          )}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            position: "relative",
+          }}
+        >
+          {(clickOnBlock.y == undefined || clickOnBlock.y == i) && (
+            <p
+              style={{
+                position: "absolute",
+                left: "-30px",
+                top: "-10px",
+              }}
+            >
+              {i * 20}
+            </p>
+          )}
+          {...renderXBlock(i)}
+        </div>
+      );
+    }
+    return blocksOnMapY;
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flex: 1,
+        flexDirection: "column",
+        borderRadius: "10px",
+        border: "1px solid grey",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          width: "80%",
+          height: "80%",
+          display: "flex",
+          flexDirection: "column",
+          border: "1px solid grey",
+          borderRadius: "10px",
+          // position: "relative",
+        }}
+      >
+        {clickOnBlock.x != undefined && clickOnBlock.y != undefined ? (
+          <Icon
+            onClick={() => {
+              setClickOnBlock({ x: undefined, y: undefined });
+            }}
+            icon={"ic:baseline-zoom-out"}
+            width={50}
+            style={{ position: "absolute", cursor: "pointer", zIndex: "10" }}
+          />
+        ) : null}
+        {...renderYBlock()}
+      </div>
+    </div>
+  );
+
   return (
     <div
       style={{
