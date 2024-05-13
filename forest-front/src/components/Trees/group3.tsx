@@ -1,16 +1,33 @@
-import React from 'react';
+import { TreeStatus } from "@/utils/types";
+import React from "react";
 
-const Group3 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
-  const handleHover = () => {
-    console.log('---------Group3 tree hovered!---------');
-    console.log("x: ", x);
-    console.log("y: ", y);
-    console.log("realX: ", realX);
-    console.log("realY: ", realY);
-    console.log("status: ", status);
-    console.log("------------------");
-    // Add any other logic you'd like to perform on hover
-  };
+const Group3 = (props: { status: TreeStatus }) => {
+  const { status } = props;
+
+  // const handleHover = () => {
+  //   console.log('---------Group3 tree hovered!---------');
+  //   console.log("x: ", x);
+  //   console.log("y: ", y);
+  //   console.log("realX: ", realX);
+  //   console.log("realY: ", realY);
+  //   console.log("status: ", status);
+  //   console.log("------------------");
+  //   // Add any other logic you'd like to perform on hover
+  // };
+
+  const fillFirst =
+    status == "Keep"
+      ? "rgb(180,103,51)"
+      : status == "Cut"
+      ? "rgb(180,103,51)"
+      : "rgb(180,103,51)";
+
+  const fillSecond =
+    status == "Keep"
+      ? "rgb(86,148,65)"
+      : status == "Cut"
+      ? "rgb(255, 20, 20)"
+      : "rgb(227, 119, 25)";
 
   return (
     <svg
@@ -21,7 +38,7 @@ const Group3 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
       height="24"
       viewBox="0 0 256 256"
       xmlSpace="preserve"
-      onMouseEnter={handleHover} // Add this line
+      // onMouseEnter={handleHover} // Add this line
     >
       <defs></defs>
       <g
@@ -47,7 +64,7 @@ const Group3 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(180,103,51)", // orange
+            fill: fillFirst,
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -63,9 +80,7 @@ const Group3 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(86,148,65)", // light green
-            // fill: "rgb(227, 119, 25)", // light orange
-            // fill: "rgb(214, 42, 19)", // light red
+            fill: fillSecond,
             fillRule: "nonzero",
             opacity: 1,
           }}

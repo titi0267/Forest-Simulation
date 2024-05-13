@@ -1,9 +1,9 @@
 "use client";
 
-import axiosInstance from '@/utils/axios';
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import '@/app/globals.css';
-import Swal from 'sweetalert2';
+import axiosInstance from "@/utils/axios";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import "@/app/globals.css";
+import Swal from "sweetalert2";
 import {
   Table,
   TableHeader,
@@ -39,7 +39,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   Keep: "success",
   Cut: "danger",
   Victim: "warning",
-  None: "primary"
+  None: "primary",
 };
 
 const INITIAL_VISIBLE_COLUMNS = [
@@ -61,7 +61,7 @@ export type DataType = {
   realY: number;
   TreeNum: number;
   species: string;
-  spgroup: string;
+  spgroup: number;
   Diameter: number;
   DiameterClass: string;
   Height: number;
@@ -130,12 +130,15 @@ const Trees = () => {
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((data) =>
-        data.species.toLowerCase().includes(filterValue.toLowerCase()),
+        data.species.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusOptions.length
+    ) {
       filteredUsers = filteredUsers.filter((data) =>
-        Array.from(statusFilter).includes(data.status),
+        Array.from(statusFilter).includes(data.status)
       );
     }
 
