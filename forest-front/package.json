@@ -32,6 +32,7 @@
     "react-router-dom": "^6.23.0",
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.5",
+    "sass": "^1.77.1",
     "sweetalert2": "^11.10.7",
     "usehooks-ts": "^3.0.2"
   },
