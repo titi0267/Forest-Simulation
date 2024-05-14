@@ -24,6 +24,7 @@ import {
   ChipProps,
   SortDescriptor,
   Tooltip,
+  Link,
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon";
 import { VerticalDotsIcon } from "./VerticalDotsIcon";
@@ -83,10 +84,9 @@ const Trees = () => {
     try {
       const response = await axiosInstance.get("/getforest/");
       if (response.data["success"] === true) {
-        console.log(response.data.message);
         const dataWithIds = response.data.message
           .slice(0, 50000)
-          .map((item: any, index: number) => ({ id: index + 1, ...item }));
+          .map((item: any) => ({ ...item }));
         setData(dataWithIds);
       }
     } catch (error) {
@@ -161,34 +161,14 @@ const Trees = () => {
     });
   }, [sortDescriptor, items]);
 
+  const getInfo = (data: { id: number }) => {
+    window.location.href = `/infoTrees?id=${data.id}`;
+  };
+  
   const renderCell = useCallback((data: Data, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof Data];
 
     switch (columnKey) {
-      case "TreeNum":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-          </div>
-        );
-      case "species":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-          </div>
-        );
-      case "Diameter":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-          </div>
-        );
-      case "Height":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-          </div>
-        );
       case "status":
         return (
           <Chip
@@ -203,19 +183,11 @@ const Trees = () => {
       case "actions":
         return (
           <div className="relative flex gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem onPress={() => console.log(data)}>
-                  View
-                </DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <Tooltip content="Details">
+              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                <EyeIcon onClick={() => getInfo(data)} />
+              </span>
+            </Tooltip>
           </div>
         );
       default:
