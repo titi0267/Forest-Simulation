@@ -1,17 +1,45 @@
-import React from 'react';
+import { TreeStatus } from "@/utils/types";
+import React from "react";
 
-const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
-  const handleHover = () => {
-    console.log('---------Group7 tree hovered!---------');
-    console.log("x: ", x);
-    console.log("y: ", y);
-    console.log("realX: ", realX);
-    console.log("realY: ", realY);
-    console.log("status: ", status);
-    console.log("------------------");
-    // Add any other logic you'd like to perform on hover
-  };
+const Group7 = (props: { status: TreeStatus }) => {
+  const { status } = props;
 
+  // const handleHover = () => {
+  //   console.log("---------Group7 tree hovered!---------");
+  //   console.log("x: ", x);
+  //   console.log("y: ", y);
+  //   console.log("realX: ", realX);
+  //   console.log("realY: ", realY);
+  //   console.log("status: ", status);
+  //   console.log("------------------");
+  //   // Add any other logic you'd like to perform on hover
+  // };
+
+  const fillFirst =
+    status == "Keep"
+      ? "rgb(104,143,44)"
+      : status == "Cut"
+      ? "rgb(255, 0, 0)"
+      : "rgb(245, 91, 20)";
+
+  const fillSecond =
+    status == "Keep"
+      ? "rgb(118,161,52)"
+      : status == "Cut"
+      ? "rgb(255, 13, 13)"
+      : "rgb(242, 96, 29)";
+  const fillThird =
+    status == "Keep"
+      ? "rgb(132,179,61)"
+      : status == "Cut"
+      ? "rgb(255, 20, 20)"
+      : "rgb(247, 107, 42)";
+  const fillFourth =
+    status == "Keep"
+      ? "rgb(132,179,61)"
+      : status == "Cut"
+      ? "rgb(255, 20, 20)"
+      : "rgb(247, 107, 42)";
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +49,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
       height="24"
       viewBox="0 0 256 256"
       xmlSpace="preserve"
-      onMouseEnter={handleHover} // Add this line
+      // onMouseEnter={handleHover} // Add this line
     >
       <g
         style={{
@@ -46,9 +74,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(104,143,44)", // green 
-            // fill: "rgb(245, 91, 20)", // orange 
-            // fill: "rgb(247, 22, 10)", // red 
+            fill: fillFirst,
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -128,9 +154,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(118,161,52)", // light green
-            // fill: "rgb(242, 96, 29)", // light orange
-            // fill: "rgb(250, 43, 32)", // light red
+            fill: fillSecond,
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -146,9 +170,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(132,179,61)", // lighter green
-            // fill: "rgb(247, 107, 42)", // lighter orange
-            // fill: "rgb(247, 52, 42)", // lighter red
+            fill: fillThird,
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -164,9 +186,7 @@ const Group7 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(132,179,61)", // lighter green
-            // fill: "rgb(247, 107, 42)", // lighter orange
-            // fill: "rgb(247, 52, 42)", // lighter red
+            fill: fillFourth,
             fillRule: "nonzero",
             opacity: 1,
           }}

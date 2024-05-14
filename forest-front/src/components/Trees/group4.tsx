@@ -1,16 +1,45 @@
-import React from 'react';
+import { TreeStatus } from "@/utils/types";
+import React from "react";
 
-const Group4 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
-  const handleHover = () => {
-    console.log('---------Group4 tree hovered!---------');
-    console.log("x: ", x);
-    console.log("y: ", y);
-    console.log("realX: ", realX);
-    console.log("realY: ", realY);
-    console.log("status: ", status);
-    console.log("------------------");
-    // Add any other logic you'd like to perform on hover
-  };
+const Group4 = (props: { status: TreeStatus }) => {
+  const { status } = props;
+
+  // const handleHover = () => {
+  //   console.log('---------Group4 tree hovered!---------');
+  //   console.log("x: ", x);
+  //   console.log("y: ", y);
+  //   console.log("realX: ", realX);
+  //   console.log("realY: ", realY);
+  //   console.log("status: ", status);
+  //   console.log("------------------");
+  //   // Add any other logic you'd like to perform on hover
+  // };
+
+  const fillFirst =
+    status == "Keep"
+      ? "rgb(28,165,111)"
+      : status == "Cut"
+      ? "rgb(255, 20, 20)"
+      : "rgb(227, 134, 20)";
+
+  const fillSecond =
+    status == "Keep"
+      ? "rgb(23,139,93)"
+      : status == "Cut"
+      ? "rgb(255, 13, 13)"
+      : "rgb(224, 125, 2)";
+  const fillThird =
+    status == "Keep"
+      ? "rgb(23,139,93)"
+      : status == "Cut"
+      ? "rgb(255, 13, 13)"
+      : "rgb(224, 125, 2)";
+  const fillFourth =
+    status == "Keep"
+      ? "rgb(23,139,93)"
+      : status == "Cut"
+      ? "rgb(255, 13, 13)"
+      : "rgb(224, 125, 2)";
 
   return (
     <svg
@@ -21,7 +50,6 @@ const Group4 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
       height="24"
       viewBox="0 0 256 256"
       xmlSpace="preserve"
-      onMouseEnter={handleHover} // Add this line
     >
       <defs></defs>
       <g
@@ -47,9 +75,7 @@ const Group4 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(28,165,111)", // light light green
-            // fill: "rgb(227, 134, 20)", // light light orange
-            // fill: "rgb(230, 50, 18)", // light light red
+            fill: fillFirst,
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -65,9 +91,7 @@ const Group4 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(23,139,93)", // light light darker green
-            // fill: "rgb(224, 125, 2)", // light light darker orange
-            // fill: "rgb(232, 37, 2)", // light light darker red
+            fill: fillSecond,
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -83,9 +107,7 @@ const Group4 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(23,139,93)", // light light darker green
-            // fill: "rgb(224, 125, 2)", // light light darker orange
-            // fill: "rgb(232, 37, 2)", // light light darker red
+            fill: fillThird,
             fillRule: "nonzero",
             opacity: 1,
           }}
@@ -101,9 +123,7 @@ const Group4 = ({x = -1, y = -1, realX = -1, realY=-1, status="fucked up"}) => {
             strokeLinecap: "butt",
             strokeLinejoin: "miter",
             strokeMiterlimit: 10,
-            fill: "rgb(23,139,93)", // light light darker green
-            // fill: "rgb(224, 125, 2)", // light light darker orange
-            // fill: "rgb(232, 37, 2)", // light light darker red
+            fill: fillFourth,
             fillRule: "nonzero",
             opacity: 1,
           }}
