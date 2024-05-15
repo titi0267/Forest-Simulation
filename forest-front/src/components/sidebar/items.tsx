@@ -28,10 +28,22 @@ export const items: SidebarItem[] = [
     title: "Forest visualization",
   },
   {
-    key: "standTable",
-    href: "/standTable",
-    icon: "f7:question",
-    title: "Stand table",
+    key: "standTableGroup",
+    href: "/standTableGroup",
+    icon: "formkit:group",
+    title: "Stand Table - Group",
+  },
+  {
+    key: "standTableSpecies",
+    href: "/standTableSpecies",
+    icon: "ooui:logo-wikispecies",
+    title: "Stand Table - Species",
+  },
+  {
+    key: "prodTable",
+    href: "/prodTable",
+    icon: "fluent:production-20-filled",
+    title: "Production Table",
   },
   {
     key: "volume",

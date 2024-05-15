@@ -6,6 +6,8 @@ import '@/app/globals.css';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './MyComponent.css';
+import { Button } from '@nextui-org/react';
+import SendIcon from '@mui/icons-material/Send';
 
 interface LordIconProps {
   src: string;
@@ -73,9 +75,16 @@ const Home = () => {
               Thank you !
             </p>
             <br /><br /><br />
-            <button onClick={generateForest} className="button type1">
-              <span className="btn-txt">GENERATE</span>
-            </button>
+            <Button
+              className="text-white font-bold"
+              type="submit"
+              color="success"
+              onClick={() => generateForest()}
+              style={{ bottom: '30px', width: '25%' }}
+              endContent={<SendIcon />}
+            >
+              Generate
+            </Button>
             <lord-icon
               src="https://cdn.lordicon.com/vmmnvljd.json"
               trigger="hover"
@@ -83,7 +92,7 @@ const Home = () => {
             />
           </div>
           <div className="col-span-1">
-            <img src="/images/programmer.jpeg" alt="Forest" style={{ position: 'relative', borderRadius: '10px', top: '55%', left: '10px', width: '65%', height: 'auto' }} />
+            <img src="/images/programmer.jpeg" alt="Forest" style={{ position: 'relative', borderRadius: '10px', top: '55%', width: '65%', height: 'auto' }} />
           </div>
         </div>
       </div>

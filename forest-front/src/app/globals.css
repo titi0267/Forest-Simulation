@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+button.MuiButton-containedPrimary {
+  @apply bg-blue-500;
+}
+
 .button {
     height: 50px;
     width: 200px;
