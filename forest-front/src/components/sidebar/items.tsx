@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 
-import { type SidebarItem } from "./sidebar";
+import { SidebarItemType, type SidebarItem } from "./sidebar";
 
 export const items: SidebarItem[] = [
   {
@@ -32,6 +32,23 @@ export const items: SidebarItem[] = [
     href: "/standTableGroup",
     icon: "formkit:group",
     title: "Stand Table - Group",
+    type: SidebarItemType.Nest,
+    items: [
+      {
+        key: "standTableGroup1",
+        href: "/standTableGroup",
+        icon: "formkit:group",
+        title: "Stand table 1",
+    
+      },
+      {
+        key: "standTableGroup2",
+        href: "/standTableGroup",
+        icon: "formkit:group",
+        title: "Stand Table 2",
+    
+      }
+    ]
   },
   {
     key: "standTableSpecies",
