@@ -28,40 +28,62 @@ export const items: SidebarItem[] = [
     title: "Forest visualization",
   },
   {
-    key: "standTableGroup",
-    href: "/standTableGroup",
+    key: "standTables",
+    // href: "/standTables",
     icon: "formkit:group",
-    title: "Stand Table - Group",
+    title: "Stand Tables",
     type: SidebarItemType.Nest,
     items: [
       {
-        key: "standTableGroup1",
-        href: "/standTableGroup",
+        key: "stVolume",
+        href: "/standTables/Volume",
         icon: "formkit:group",
-        title: "Stand table 1",
-    
+        title: "ST Volume",    
       },
       {
-        key: "standTableGroup2",
-        href: "/standTableGroup",
+        key: "stNumber",
+        href: "/standTables/Number",
         icon: "formkit:group",
-        title: "Stand Table 2",
-    
-      }
+        title: "ST Number",    
+      },
+      {
+        key: "stProduction0",
+        href: "/standTables/Production0",
+        icon: "formkit:group",
+        title: "ST Production0",    
+      },
+      {
+        key: "stDamage",
+        href: "/standTables/Damage",
+        icon: "formkit:group",
+        title: "ST Damage",    
+      },
+      {
+        key: "stGrowth30",
+        href: "/standTables/Growth30",
+        icon: "formkit:group",
+        title: "ST Growth30",    
+      },
+      {
+        key: "stProduction30",
+        href: "/standTables/Production30",
+        icon: "formkit:group",
+        title: "ST Production30",    
+      },
     ]
   },
-  {
-    key: "standTableSpecies",
-    href: "/standTableSpecies",
-    icon: "ooui:logo-wikispecies",
-    title: "Stand Table - Species",
-  },
-  {
-    key: "prodTable",
-    href: "/prodTable",
-    icon: "fluent:production-20-filled",
-    title: "Production Table",
-  },
+  // {
+  //   key: "standTableSpecies",
+  //   href: "/standTableSpecies",
+  //   icon: "ooui:logo-wikispecies",
+  //   title: "Stand Table - Species",
+  // },
+  // {
+  //   key: "prodTable",
+  //   href: "/prodTable",
+  //   icon: "fluent:production-20-filled",
+  //   title: "Production Table",
+  // },
   {
     key: "volume",
     href: "/volume",

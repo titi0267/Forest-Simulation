@@ -27,8 +27,10 @@ switch ($method) {
             $data = ['success' => true, 'message' => $tree];
             echo json_encode($data);
         }
-        if ($_SERVER['REQUEST_URI'] === "/tree/getStandtableGroup/") {
-            $standtable = getStandtableGroup();
+        if (str_starts_with($_SERVER['REQUEST_URI'], "/tree/getStandTable/") === true) {
+            $l = explode("/", $_SERVER['REQUEST_URI']);
+            $table = $l[count($l) - 1];
+            $standtable = get_stand_table($table);
             $data = ['success' => true, 'message' => $standtable];
             echo json_encode($data);
         }
@@ -41,43 +43,17 @@ switch ($method) {
             $parts = explode("/", $_SERVER['REQUEST_URI']);
             $blockX = $parts[3];
             $blockY = $parts[4];
-            $trees = getTreesInBlock($blockX, $blockY);
-            $data = ['success' => true, 'message' => $trees];
+            [$trees, $damages] = getTreesInBlock($blockX, $blockY);
+            $data = ['success' => true, 'message' => $trees, 'damages' => $damages];
             echo json_encode($data);
         }
         break;
 }
 
-function getStandtableGroup()
-{
-    global $connection;
-    $sql = "SELECT SpeciesGroup, `5-15`, `15-30`, `30-45`, `45-60`, `60+` FROM StandTableGroup";
-    $result = $connection->query($sql);
-    if (!$result) {
-        die("Invalid query: " . $connection->errorInfo());
-    }
-
-    $standtable = array();
-    while ($row = $result->fetch()) {
-        array_push(
-            $standtable,
-            [
-                "SpeciesGroup" => $row["SpeciesGroup"],
-                "5-15" => $row["5-15"],
-                "15-30" => $row["15-30"],
-                "30-45" => $row["30-45"],
-                "45-60" => $row["45-60"],
-                "60+" => $row["60+"],
-            ]
-        );
-    }
-    return $standtable;
-}
-
 function getProdtable()
 {
     global $connection;
-    $sql = "SELECT SpeciesGroup, Volume, Number, Production0, Damage, Growth30, Production30 FROM ProdTable";
+    $sql = "SELECT SpeciesGroup, Volume, Number, Production0, Damage, Growth30, Production30 FROM prod_tables";
     $result = $connection->query($sql);
     if (!$result) {
         die("Invalid query: " . $connection->errorInfo());
@@ -187,6 +163,7 @@ function getTreesInBlock($blockX, $blockY)
     $trees = array();
     while ($row = $stmt->fetch()) {
         $trees[] = array(
+            "id" => $row["id"],
             "BlockX" => $row["BlockX"],
             "BlockY" => $row["BlockY"],
             "x" => $row["x"],
@@ -201,69 +178,40 @@ function getTreesInBlock($blockX, $blockY)
             "status" => $row["status"]
         );
     }
-    return $trees;
-}
 
-function insert_stand_table_to_database($STAND_TABLE, $INFO)
-{
-    global $connection;
+    $sql = "SELECT * FROM `DamageTrees`";
+    $damages = array();
 
-    $dclass = array(
-        1 => "5-15", 2 => "15-30", 3 => "30-45",
-        4 => "45-60", 5 => "60+",
-    );
-
-    foreach ($INFO as $groupName => $diameterClasses) {
-        foreach ($diameterClasses as $diameter => $data) {
-            $volume = round($data["Volume"], 2);
-            $num = $data["Num"];
-            $STAND_TABLE[$groupName][$dclass[$diameter]] = "$volume | $num";
-        }
+    while ($row = $stmt->fetch()) {
+        $damages[] = array(
+            "Cut_ID" => $row["Cut_ID"],
+            "Victim_ID" => $row["Victim_ID"],
+            "CategoryDamage" => $row["CategoryDamage"],
+        );
     }
 
-    foreach ($STAND_TABLE as $groupName => $data) {
-        $diameter1 = $data["5-15"];
-        $diameter2 = $data["15-30"];
-        $diameter3 = $data["30-45"];
-        $diameter4 = $data["45-60"];
-        $diameter5 = $data["60+"];
-        $sqlValues[] = "('$groupName', '$diameter1', '$diameter2', '$diameter3', '$diameter4', '$diameter5')";
-    }
-
-    $sqlValuesString = implode(", ", $sqlValues);
-    $sql = "INSERT INTO `StandTableGroup` (`SpeciesGroup`, `5-15`, `15-30`, `30-45`, `45-60`, `60+`)
-                VALUES $sqlValuesString";
-    $connection->query($sql);
+    return [$trees, $damages];
 }
 
-function create_stand_table_group()
+function create_stand_table($group)
 {
-    $STAND_TABLE = [];
-    $INFO        = [];
-
-    $group = array(
-        1 => "Mersawa", 2 => "Keruing", 3 => "Dip Commercial", 4 => "Dip NonCommercial",
-        5 => "NonDip Commercial", 6 => "NonDip NonCommercial", 7 => "Others"
-    );
+    $INFO = [];
 
     for ($spgroup = 1; $spgroup <= 7; $spgroup++) {
-        $STAND_TABLE[$group[$spgroup]] = [
-            "5-15" => "",
-            "15-30" => "",
-            "30-45" => "",
-            "45-60" => "",
-            "60+" => "",
-        ];
         for ($class = 1; $class <= 5; $class++) {
             $INFO[$group[$spgroup]][$class] = [
                 "Volume" => 0,
                 "Number" => 0,
+                "Production0" => 0,
+                "Damage" => 0,
+                "Growth30" => 0,
+                "Production30" => 0,
             ];
         }
     }
 
     global $connection;
-    $sql = "SELECT spgroup, DiameterClass, Volume FROM trees";
+    $sql = "SELECT spgroup, DiameterClass, Volume, `status`, DamageSTEM, DamageCROWN, GrowthD30, Volume30 FROM trees";
     $result = $connection->query($sql);
     if (!$result) {
         die("Invalid query: " . $connection->errorInfo());
@@ -273,10 +221,55 @@ function create_stand_table_group()
         $speciesGroup = $row["spgroup"];
         $class = $row["DiameterClass"];
         $volume = $row["Volume"];
+        $status = $row["status"];
+        $damageStem = $row["DamageSTEM"] ?? 0;
+        $damageCrown = $row["DamageCROWN"] ?? 0;
+        $diameter30 = $row["GrowthD30"] ?? 0;
+        $volume30 = $row["Volume30"] ?? 0;
         $INFO[$group[$speciesGroup]][$class]["Volume"] += $volume;
-        $INFO[$group[$speciesGroup]][$class]["Num"] += 1;
+        $INFO[$group[$speciesGroup]][$class]["Number"] += 1;
+        if ($status == "Cut") {
+            $INFO[$group[$speciesGroup]][$class]["Production0"] += 1;
+        }
+        $INFO[$group[$speciesGroup]][$class]["Damage"] += $damageStem;
+        $INFO[$group[$speciesGroup]][$class]["Damage"] += $damageCrown;
+        $INFO[$group[$speciesGroup]][$class]["Growth30"] += $volume30;
+        if (in_array($speciesGroup, [1, 2, 3, 5]) && ($status == "Victim" || $diameter30 >= 45)) {
+            $INFO[$group[$speciesGroup]][$class]["Production30"] += 1;
+        }
     }
-    insert_stand_table_to_database($STAND_TABLE, $INFO);
+    return $INFO;
+}
+
+function get_stand_table($table)
+{
+    $group = array(
+        1 => "Mersawa", 2 => "Keruing", 3 => "Dip Commercial", 4 => "Dip NonCommercial",
+        5 => "NonDip Commercial", 6 => "NonDip NonCommercial", 7 => "Others"
+    );
+
+    $INFO = create_stand_table($group);
+    $STAND_TABLE = [];
+
+    $dclass = array(
+        1 => "5-15", 2 => "15-30", 3 => "30-45",
+        4 => "45-60", 5 => "60+",
+    );
+
+    foreach ($group as $key => $value) {
+        array_push(
+            $STAND_TABLE, [
+                "SpeciesGroup" => $value,
+                "5-15" =>  $INFO[$value][1][$table],
+                "15-30" => $INFO[$value][2][$table],
+                "30-45" => $INFO[$value][3][$table],
+                "45-60" => $INFO[$value][4][$table],
+                "60+"  =>  $INFO[$value][5][$table],
+            ]
+        );
+    }
+
+    return $STAND_TABLE;
 }
 
 function insert_production_table_to_database($PROD_TABLE)
@@ -293,7 +286,7 @@ function insert_production_table_to_database($PROD_TABLE)
         $sqlValues[] = "('$key', '$volume', '$number', '$prod0', '$damage', '$growth30', '$prod30')";
     }
     $sqlValuesString = implode(", ", $sqlValues);
-    $sql = "INSERT INTO `ProdTable` (`SpeciesGroup`, `Volume`, `Number`, `Production0`, `Damage`, `Growth30`, `Production30`)
+    $sql = "INSERT INTO `prod_tables` (`SpeciesGroup`, `Volume`, `Number`, `Production0`, `Damage`, `Growth30`, `Production30`)
                 VALUES $sqlValuesString";
     $connection->query($sql);
 }
@@ -387,9 +380,8 @@ function generate()
             create_tree($blockX, $blockY, $SPECIES_TABLE, $SPECIES_GROUP);
         }
     }
-    create_stand_table_group();
-    // calculate_volume();
-    // create_production_table();
+    calculate_volume();
+    create_production_table();
 }
 
 function update_victims_due_to_crown()
@@ -418,11 +410,6 @@ function update_victims_due_to_crown()
                 FROM DamageTrees
             )";
     $connection->query($sql);
-}
-
-function update_cut_trees_damage_crown()
-{
-    global $connection;
 
     $sql = "INSERT INTO trees (id, DamageCROWN)
             SELECT cutter.id, SUM(victim.Volume)
@@ -431,6 +418,48 @@ function update_cut_trees_damage_crown()
             JOIN trees AS victim ON victim.id = dt.Victim_ID
             GROUP BY cutter.id
             ON DUPLICATE KEY UPDATE DamageCROWN = VALUES(DamageCROWN)";
+
+    $connection->query($sql);
+}
+
+function update_victims_due_to_stem()
+{
+    global $connection;
+
+    $sql = "INSERT INTO DamageTrees (Cut_ID, Victim_ID, CategoryDamage)
+            SELECT new_positions.cutter_id, t.id, 1
+            FROM trees AS t
+            JOIN (
+                SELECT id AS cutter_id, Height, RealX, RealY, CutAngle,
+                       TAN(RADIANS(CutAngle + 1)) + 0.0001 AS tan_plus,
+                       TAN(RADIANS(CutAngle - 1)) + 0.0001 AS tan_minus,
+                       RealX AS x0, RealY AS y0,
+                       CASE WHEN (CutAngle >= 0 AND CutAngle < 90) OR (CutAngle > 270 AND CutAngle <= 360)
+                            THEN 1 ELSE -1 END AS direction
+                FROM trees 
+                WHERE status = 'Cut'
+            ) AS new_positions
+            ON t.status NOT IN ('Cut', 'Victim')
+            AND (new_positions.direction * (new_positions.x0 + new_positions.Height + 10)) > t.RealX
+            AND (new_positions.direction * (new_positions.x0)) < t.RealX
+            AND (t.RealY > (t.RealX / new_positions.tan_plus) AND t.RealY < (t.RealX / new_positions.tan_minus))";
+    $connection->query($sql);
+
+    $sql = "UPDATE trees
+            SET status = 'Victim', DamageSTEM = Volume
+            WHERE id IN (
+                SELECT Victim_ID
+                FROM DamageTrees
+            )";
+    $connection->query($sql);
+
+    $sql = "INSERT INTO trees (id, DamageSTEM)
+            SELECT cutter.id, SUM(victim.Volume)
+            FROM trees AS cutter
+            JOIN DamageTrees AS dt ON dt.Cut_ID = cutter.id
+            JOIN trees AS victim ON victim.id = dt.Victim_ID
+            GROUP BY cutter.id
+            ON DUPLICATE KEY UPDATE DamageSTEM = VALUES(DamageSTEM)";
     
     $connection->query($sql);
 }
@@ -440,14 +469,8 @@ function calculate_volume()
     global $connection;
     $connection->beginTransaction();
 
-    // try {
-    //     update_victims_due_to_stem();
-    // } catch (Exception $e) {
-    //     $connection->rollBack();
-    //     throw $e;
-    // }
+    update_victims_due_to_stem();
     update_victims_due_to_crown();
-    update_cut_trees_damage_crown();
 
     $connection->commit();
 }
@@ -512,23 +535,31 @@ function create_tree($blockX, $blockY, $SPECIES_TABLE, $SPECIES_GROUP)
         [45, 60, 4],
         [60, 250, 5],
     ];
+    $heightMap = [
+        1 => [250, 550],
+        2 => [550, 1500],
+        3 => [1500, 2500],
+        4 => [2000, 4000],
+        5 => [2000, 4000],
+    ];
     $sqlValues = [];
     for ($group = 1; $group <= $NoGroupSpecies; $group++) {
         for ($class = 0; $class < $NumDclass; $class++) {
             $density = $SPECIES_GROUP[$group][$class]["denstity"];
             for ($i = 0; $i < $density; $i++) {
-                $random = rand(0, count($SPECIES_TABLE[$group]) - 1);
+                $random = mt_rand(0, count($SPECIES_TABLE[$group]) - 1);
                 $species = $SPECIES_TABLE[$group][$random]["Species_Code"];
-                $diameter = rand($SPECIES_GROUP[$group][$class]["diameterMin"] * 100, $SPECIES_GROUP[$group][$class]["diameterMax"] * 100) / 100;
+                $diameter = mt_rand($SPECIES_GROUP[$group][$class]["diameterMin"] * 100, $SPECIES_GROUP[$group][$class]["diameterMax"] * 100) / 100;
                 foreach ($diameterClassMapping as $mapping) {
                     if ($diameter >= $mapping[0] && $diameter < $mapping[1]) {
                         $diameterClass = $mapping[2];
                         break;
                     }
                 }
-                $height = rand(10 * 100, 35 * 100) / 100;
-                $locationx = rand(1, 99);
-                $locationy = rand(1, 99);
+                $map = $heightMap[$class + 1];
+                $height = mt_rand($map[0] / 100, $map[1] / 100) / 100;
+                $locationx = mt_rand(1, 99);
+                $locationy = mt_rand(1, 99);
                 $x = $locationx;
                 $y = $locationy;
                 $realx = ($blockX - 1) * 100 + $locationx;
@@ -544,17 +575,16 @@ function create_tree($blockX, $blockY, $SPECIES_TABLE, $SPECIES_GROUP)
                 $cutting_angle = 0;
                 if ($status == "Cut") {
                     $PROD = $volume;
-                    $cutting_angle = rand(0, 360);
+                    $cutting_angle = mt_rand(0, 360);
                 }
                 $diameter30 = get_diameter_after_30_years($diameter);
                 $volume30   = get_volume_after_30_years($diameter30 / 100, $group);
-                $zero = 0;
-                $sqlValues[] = "('$blockX', '$blockY', '$x', '$y', '$realx', '$realy', '$treeId', '$species', '$group', '" . round($diameter, 1) . "', '$diameterClass', '" . round($height, 1) . "', '$volume', '$status', '$cutID', '$PROD', '$cutting_angle', '$zero', '$diameter30', '$volume30')";
+                $sqlValues[] = "('$blockX', '$blockY', '$x', '$y', '$realx', '$realy', '$treeId', '$species', '$group', '" . round($diameter, 1) . "', '$diameterClass', '" . round($height, 1) . "', '$volume', '$status', '$cutID', '$PROD', '$cutting_angle', '$diameter30', '$volume30')";
             }
         }
     }
     $sqlValuesString = implode(", ", $sqlValues);
-    $sql = "INSERT INTO `trees` (`BlockX`, `BlockY`, `x`, `y`, `RealX`, `RealY`, `TreeNum`, `species`, `spgroup`, `Diameter`, `DiameterClass`, `Height`, `Volume`, `status`, `CutID`, `PROD`, `CutAngle`, `DamageSTEM`, `GrowthD30`, `Volume30`)
+    $sql = "INSERT INTO `trees` (`BlockX`, `BlockY`, `x`, `y`, `RealX`, `RealY`, `TreeNum`, `species`, `spgroup`, `Diameter`, `DiameterClass`, `Height`, `Volume`, `status`, `CutID`, `PROD`, `CutAngle`, `GrowthD30`, `Volume30`)
                 VALUES $sqlValuesString";
     $connection->query($sql);
 }
@@ -573,12 +603,12 @@ function clear_trees()
     if (!$result) {
         die("Invalid query: " . $connection->errorInfo());
     }
-    $sql = "DELETE FROM StandTableGroup";
+    $sql = "DELETE FROM stand_table_groups";
     $result = $connection->query($sql);
     if (!$result) {
         die("Invalid query: " . $connection->errorInfo());
     }
-    $sql = "DELETE FROM ProdTable";
+    $sql = "DELETE FROM prod_tables";
     $result = $connection->query($sql);
     if (!$result) {
         die("Invalid query: " . $connection->errorInfo());
