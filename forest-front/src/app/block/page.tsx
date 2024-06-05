@@ -45,17 +45,17 @@ const Block = () => {
   const chooseGroup = (group: number, status: TreeStatus) => {
     switch (group) {
       case 1:
-        return (<div onClick={()=>{console.log("gp1")}}>
-          <Group1 status={status} />;
-          </div>)
+        return (
+          <Group1 status={status} />
+        )
       case 2:
-        return <div onClick={()=>{console.log("gp1")}}><Group2 status={status} /></div>;
+        return <Group2 status={status} />
       case 3:
-        return <div onClick={()=>{console.log("gp1")}}><Group3 status={status} /></div>;
+        return <Group3 status={status} />
       case 4:
-        return <div onClick={()=>{console.log("gp1")}}><Group4 status={status} /></div>;
+        return <Group4 status={status} />
       case 5:
-        return <div onClick={()=>{console.log("gp1")}}><Group5 status={status} /></div>;
+        return <Group5 status={status} />
       case 6:
         return <Group6 status={status} />;
       default:
@@ -140,6 +140,10 @@ const Block = () => {
       
     }
     return null
+  }
+
+  const renderLine = (id1: number, id2: number) => {
+    return (<div></div>)
   }
 
   const [clickOnBlock, setClickOnBlock] = useState<{
