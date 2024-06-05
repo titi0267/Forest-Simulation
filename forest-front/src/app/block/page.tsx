@@ -19,14 +19,13 @@ const Block = () => {
   const [datas, setData] = useState<DataType[]>([]);
   const [blockX, setBlockX] = useState(1);
   const [blockY, setBlockY] = useState(1);
+  const [mouseEnter, setMouseEnter] = useState<number|null>(null)
 
   const getTreesInBlock = async (blockX: number, blockY: number) => {
     try {
-      console.log(blockX, blockY);
       const response = await axiosInstance.get(
         `/getTreesInBlock/${blockX}/${blockY}/`
       );
-      console.log(response);
       if (response.data.success === true) {
         const dataWithIds = response.data.message
           .slice(0, 500)
@@ -46,15 +45,17 @@ const Block = () => {
   const chooseGroup = (group: number, status: TreeStatus) => {
     switch (group) {
       case 1:
-        return <Group1 status={status} />;
+        return (<div onClick={()=>{console.log("gp1")}}>
+          <Group1 status={status} />;
+          </div>)
       case 2:
-        return <Group2 status={status} />;
+        return <div onClick={()=>{console.log("gp1")}}><Group2 status={status} /></div>;
       case 3:
-        return <Group3 status={status} />;
+        return <div onClick={()=>{console.log("gp1")}}><Group3 status={status} /></div>;
       case 4:
-        return <Group4 status={status} />;
+        return <div onClick={()=>{console.log("gp1")}}><Group4 status={status} /></div>;
       case 5:
-        return <Group5 status={status} />;
+        return <div onClick={()=>{console.log("gp1")}}><Group5 status={status} /></div>;
       case 6:
         return <Group6 status={status} />;
       default:
@@ -63,7 +64,6 @@ const Block = () => {
   };
 
   const renderTree = (x: number | undefined, y: number | undefined) => {
-    console.log(x, y);
 
     return datas.map((data) => {
       if (x == undefined || y == undefined) {
@@ -89,17 +89,25 @@ const Block = () => {
         y * 20 <= data.y &&
         (y + 1) * 20 > data.y
       ) {
-        console.log((data.x - x * 20) * 5, (data.y - y * 20) * 5);
+        console.log("right render")
         return (
           <div
             style={{
               position: "absolute",
-              zIndex: 10,
-              pointerEvents: "none",
+              zIndex: 100,
               left: `calc(${(data.x - x * 20) * 5}% - 12px)`,
               top: `calc(${(data.y - y * 20) * 5}% - 24px)`,
             }}
+            onMouseEnter={()=> {
+              console.log("mouse enter")
+              setMouseEnter(data.id)
+            }}
+            onMouseLeave={()=> {
+              console.log("mouse leave")
+              setMouseEnter(null)
+            }}
           >
+            {mouseEnter == data.id  ? hoverComponent(data): null}
             {chooseGroup(
               data.spgroup,
               data.status == "None" ? "Keep" : (data.status as TreeStatus)
@@ -109,6 +117,30 @@ const Block = () => {
       }
     });
   };
+
+  const hoverComponent = (data: DataType) => {
+    console.log(clickOnBlock.x, clickOnBlock.y)
+    if (clickOnBlock.x && clickOnBlock.y) {
+      console.log("tree hover no undef")
+      return (
+        <div style={{ position:'absolute', top: "20px", zIndex:999, width: "200px", display:"flex", flexDirection: 'column', opacity: '0.8', backgroundColor:'gray', color:'white', borderRadius:"10px", padding:"3px"}}>
+          <p>Group: {data.spgroup}</p>
+          <p>Species: {data.species}</p>
+          <p>Cut angle: {data.CutAngle}</p>
+          <p>Damage crown: {data.DamageCROWN}</p>
+          <p>Damage stem: {data.DamageSTEM}</p>
+          <p>Diameter: {data.Diameter}</p>
+          <p>Growth 30: {data.GrowthD30}</p>
+          <p>Height: {data.Height}</p>
+          <p>Production: {data.PROD}</p>
+          <p>Volume: {data.Volume}</p>
+          <p>Status: {data.status}</p>
+        </div>
+      ) 
+      
+    }
+    return null
+  }
 
   const [clickOnBlock, setClickOnBlock] = useState<{
     x: number | undefined;
@@ -197,7 +229,6 @@ const Block = () => {
       (type == "forward" && blockX >= 10)
         ? "red"
         : "black";
-    console.log(type, blockX, blockY, arrowColor);
 
     const onClick = () => {
       switch (type) {

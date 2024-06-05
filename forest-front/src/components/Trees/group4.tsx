@@ -50,6 +50,12 @@ const Group4 = (props: { status: TreeStatus }) => {
       height="24"
       viewBox="0 0 256 256"
       xmlSpace="preserve"
+      onClick={()=> {
+        console.log("click 4")
+      }}
+      style={{zIndex:1}}
+
+      onMouseEnter={()=>{console.log('test')}}
     >
       <defs></defs>
       <g

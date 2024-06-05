@@ -36,11 +36,14 @@ const Group1 = (props: { status: TreeStatus }) => {
       width="24"
       height="24"
       viewBox="0 0 256 256"
+      style={{zIndex:1}}
       xmlSpace="preserve"
       // onMouseEnter={handleHover} // Add this line
-    >
+
+>
       <defs></defs>
       <g
+      
         style={{
           stroke: "none",
           strokeWidth: 0,
@@ -72,6 +75,9 @@ const Group1 = (props: { status: TreeStatus }) => {
             fillRule: "nonzero",
             opacity: 1,
           }}
+          onClick={()=>{console.log('reevsc')}}
+          onMouseEnter={()=>{console.log('reevsc')}}
+    
           transform=" matrix(1 0 0 1 0 0) "
         />
         <polygon
@@ -101,7 +107,11 @@ const Group1 = (props: { status: TreeStatus }) => {
             fill: fillFirst,
             fillRule: "nonzero",
             opacity: 1,
+          
           }}
+          onClick={()=>{console.log('reevsc')}}
+          onMouseEnter={()=>{console.log('reevsc')}}
+    
           transform=" matrix(1 0 0 1 0 0) "
           stroke-linecap="round"
         />

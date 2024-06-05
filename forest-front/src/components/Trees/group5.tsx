@@ -37,7 +37,14 @@ const Group5 = (props: { status: TreeStatus }) => {
       height="24"
       viewBox="0 0 256 256"
       xmlSpace="preserve"
-      // onMouseEnter={handleHover} // Add this line
+      onClick={()=> {
+        console.log("click 2")
+      }}
+      style={{
+        zIndex:1
+      }}
+
+      onMouseEnter={()=>{console.log('hover')}} // Add this line
     >
       <defs></defs>
       <g
