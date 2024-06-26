@@ -72,6 +72,12 @@ export const items: SidebarItem[] = [
       },
     ]
   },
+  {
+    key: "prodChart",
+    href: "/prodChart",
+    icon: "solar:chart-bold-duotone",
+    title: "Production Chart",
+  },
   // {
   //   key: "standTableSpecies",
   //   href: "/standTableSpecies",

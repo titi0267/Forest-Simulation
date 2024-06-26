@@ -31,4 +31,13 @@ const statusOptions = [
     { name: "None", uid: "None" },
 ];
 
-export { columns, statusOptions };
+const diameterOptions = [
+    { name: "45", uid: "45" },
+    { name: "50", uid: "50" },
+    { name: "55", uid: "55" },
+    { name: "60", uid: "60" },
+    { name: "65", uid: "65" },
+];
+
+
+export { columns, statusOptions, diameterOptions };

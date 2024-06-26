@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import axiosInstance from "@/utils/axios";
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import "@/app/globals.css";
-import Swal from "sweetalert2";
+import axiosInstance from '@/utils/axios';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import '@/app/globals.css';
+import Swal from 'sweetalert2';
 import {
   Table,
   TableHeader,
@@ -25,32 +25,25 @@ import {
   SortDescriptor,
   Tooltip,
   Link,
-} from "@nextui-org/react";
-import { PlusIcon } from "./PlusIcon";
-import { VerticalDotsIcon } from "./VerticalDotsIcon";
-import { ChevronDownIcon } from "./ChevronDownIcon";
-import { SearchIcon } from "./SearchIcon";
-import { EditIcon } from "./EditIcon";
-import { DeleteIcon } from "./DeleteIcon";
-import { EyeIcon } from "./EyeIcon";
-import { columns, statusOptions } from "./data";
-import { capitalize } from "./utils";
+} from '@nextui-org/react';
+import { PlusIcon } from './PlusIcon';
+import { VerticalDotsIcon } from './VerticalDotsIcon';
+import { ChevronDownIcon } from './ChevronDownIcon';
+import { SearchIcon } from './SearchIcon';
+import { EditIcon } from './EditIcon';
+import { DeleteIcon } from './DeleteIcon';
+import { EyeIcon } from './EyeIcon';
+import { columns, statusOptions, diameterOptions } from './data';
+import { capitalize } from './utils';
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  Keep: "success",
-  Cut: "danger",
-  Victim: "warning",
-  None: "primary",
+const statusColorMap: Record<string, ChipProps['color']> = {
+  Keep: 'success',
+  Cut: 'danger',
+  Victim: 'warning',
+  None: 'primary',
 };
 
-const INITIAL_VISIBLE_COLUMNS = [
-  "TreeNum",
-  "species",
-  "Diameter",
-  "Height",
-  "status",
-  "actions",
-];
+const INITIAL_VISIBLE_COLUMNS = ['TreeNum', 'species', 'Diameter', 'Height', 'status', 'actions'];
 
 export type DataType = {
   id: number;
@@ -82,15 +75,13 @@ const Trees = () => {
 
   const getForest = async () => {
     try {
-      const response = await axiosInstance.get("/getforest/");
-      if (response.data["success"] === true) {
-        const dataWithIds = response.data.message
-          .slice(0, 50000)
-          .map((item: any) => ({ ...item }));
+      const response = await axiosInstance.get('/getforest/');
+      if (response.data['success'] === true) {
+        const dataWithIds = response.data.message.slice(0, 50000).map((item: any) => ({ ...item }));
         setData(dataWithIds);
       }
     } catch (error) {
-      console.error("Erreur:", error);
+      console.error('Erreur:', error);
     }
   };
 
@@ -103,26 +94,22 @@ const Trees = () => {
     }
   }, []);
 
-  const [filterValue, setFilterValue] = useState("");
+  const [filterValue, setFilterValue] = useState('');
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = useState<Selection>(
-    new Set(INITIAL_VISIBLE_COLUMNS)
-  );
-  const [statusFilter, setStatusFilter] = useState<Selection>("all");
+  const [visibleColumns, setVisibleColumns] = useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [statusFilter, setStatusFilter] = useState<Selection>('all');
   const [rowsPerPage, setRowsPerPage] = useState(15);
   const [page, setPage] = useState(1);
   const hasSearchFilter = Boolean(filterValue);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: "spgroup",
-    direction: "ascending",
+    column: 'spgroup',
+    direction: 'ascending',
   });
 
   const headerColumns = useMemo(() => {
-    if (visibleColumns === "all") return columns;
+    if (visibleColumns === 'all') return columns;
 
-    return columns.filter((column) =>
-      Array.from(visibleColumns).includes(column.uid)
-    );
+    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
@@ -133,10 +120,7 @@ const Trees = () => {
         data.species.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
-    if (
-      statusFilter !== "all" &&
-      Array.from(statusFilter).length !== statusOptions.length
-    ) {
+    if (statusFilter !== 'all' && Array.from(statusFilter).length !== statusOptions.length) {
       filteredUsers = filteredUsers.filter((data) =>
         Array.from(statusFilter).includes(data.status)
       );
@@ -160,30 +144,25 @@ const Trees = () => {
       const second = b[sortDescriptor.column as keyof Data] as number;
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === "descending" ? -cmp : cmp;
+      return sortDescriptor.direction === 'descending' ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
   const getInfo = (data: { id: number }) => {
     window.location.href = `/infoTrees?id=${data.id}`;
   };
-  
+
   const renderCell = useCallback((data: Data, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof Data];
 
     switch (columnKey) {
-      case "status":
+      case 'status':
         return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[data.status]}
-            size="sm"
-            variant="flat"
-          >
+          <Chip className="capitalize" color={statusColorMap[data.status]} size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
-      case "actions":
+      case 'actions':
         return (
           <div className="relative flex gap-2">
             <Tooltip content="Details">
@@ -210,25 +189,22 @@ const Trees = () => {
     }
   }, [page]);
 
-  const onRowsPerPageChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setRowsPerPage(Number(e.target.value));
-      setPage(1);
-    },
-    []
-  );
+  const onRowsPerPageChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRowsPerPage(Number(e.target.value));
+    setPage(1);
+  }, []);
 
   const onSearchChange = useCallback((value?: string) => {
     if (value) {
       setFilterValue(value);
       setPage(1);
     } else {
-      setFilterValue("");
+      setFilterValue('');
     }
   }, []);
 
   const onClear = useCallback(() => {
-    setFilterValue("");
+    setFilterValue('');
     setPage(1);
   }, []);
 
@@ -252,10 +228,7 @@ const Trees = () => {
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  variant="flat"
-                >
+                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                   Status
                 </Button>
               </DropdownTrigger>
@@ -265,8 +238,7 @@ const Trees = () => {
                 closeOnSelect={false}
                 selectedKeys={statusFilter}
                 selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
+                onSelectionChange={setStatusFilter}>
                 {statusOptions.map((status) => (
                   <DropdownItem key={status.uid} className="capitalize">
                     {capitalize(status.name)}
@@ -276,10 +248,7 @@ const Trees = () => {
             </Dropdown>
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
-                  variant="flat"
-                >
+                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
                   Columns
                 </Button>
               </DropdownTrigger>
@@ -289,8 +258,7 @@ const Trees = () => {
                 closeOnSelect={false}
                 selectedKeys={visibleColumns}
                 selectionMode="multiple"
-                onSelectionChange={setVisibleColumns}
-              >
+                onSelectionChange={setVisibleColumns}>
                 {columns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
                     {capitalize(column.name)}
@@ -300,30 +268,26 @@ const Trees = () => {
             </Dropdown>
             <Button
               color="danger"
-              isDisabled={selectedKeys !== "all" && !selectedKeys.size}
+              isDisabled={selectedKeys !== 'all' && !selectedKeys.size}
               onPress={() => deleteSelectedKeys(selectedKeys)}
-              endContent={<DeleteIcon />}
-            >
+              endContent={<DeleteIcon />}>
               Delete
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span
-            style={{ position: "relative", left: "10px" }}
-            className="text-default-400 text-small"
-          >
+            style={{ position: 'relative', left: '10px' }}
+            className="text-default-400 text-small">
             Total {datas.length} trees
           </span>
           <label
-            style={{ position: "relative", right: "10px" }}
-            className="flex items-center text-default-400 text-small"
-          >
+            style={{ position: 'relative', right: '10px' }}
+            className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
               className="bg-transparent outline-none text-default-400 text-small"
-              onChange={onRowsPerPageChange}
-            >
+              onChange={onRowsPerPageChange}>
               <option value="25">25</option>
               <option value="50">50</option>
               <option value="100">100</option>
@@ -349,8 +313,8 @@ const Trees = () => {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-            ? "All items selected"
+          {selectedKeys === 'all'
+            ? 'All items selected'
             : `${selectedKeys.size} of ${filteredItems.length} selected`}
         </span>
         <Pagination
@@ -363,20 +327,10 @@ const Trees = () => {
           onChange={setPage}
         />
         <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onPreviousPage}
-          >
+          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
             Previous
           </Button>
-          <Button
-            isDisabled={pages === 1}
-            size="sm"
-            variant="flat"
-            onPress={onNextPage}
-          >
+          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
             Next
           </Button>
         </div>
@@ -385,44 +339,42 @@ const Trees = () => {
   }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
 
   return (
-    <Table
-      aria-label="Example table with custom cells, pagination and sorting"
-      isHeaderSticky
-      isStriped
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{
-        wrapper: "max-h-[465px]",
-      }}
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={"No users found"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <div>
+      <Table
+        aria-label="Example table with custom cells, pagination and sorting"
+        isHeaderSticky
+        isStriped
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        classNames={{
+          wrapper: 'max-h-[465px]',
+        }}
+        selectedKeys={selectedKeys}
+        selectionMode="multiple"
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}>
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === 'actions' ? 'center' : 'start'}
+              allowsSorting={column.sortable}>
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody emptyContent={'No users found'} items={sortedItems}>
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
 
