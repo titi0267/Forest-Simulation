@@ -62,7 +62,7 @@ const Block = () => {
         return <Group7 status={status} />;
     }
   };
-
+  
   const renderTree = (x: number | undefined, y: number | undefined) => {
 
     return datas.map((data) => {
@@ -107,6 +107,7 @@ const Block = () => {
               setMouseEnter(null)
             }}
           >
+            {/* {renderLine(((data.x - x * 20) * 5)% - 12, ((datas.find(dat=> dat.id == data.id)?.x ?? 0 - x * 20) * 5)*100 - 12,((data.x - x * 20) * 5)*100 - 24,((datas.find(dat=> dat.id == data.id)?.y?? 0 - y * 20) * 5)*100 - 24)} */}
             {mouseEnter == data.id  ? hoverComponent(data): null}
             {chooseGroup(
               data.spgroup,
@@ -142,8 +143,16 @@ const Block = () => {
     return null
   }
 
-  const renderLine = (id1: number, id2: number) => {
-    return (<div></div>)
+  const renderLine = (x1: number, x2: number, y1: number, y2: number) => {
+    return (
+      <svg style={{position:"absolute"}}>
+      <line 
+
+      x1={x1} y1={y1} x2={x2} y2={y2} 
+      style={{stroke:"red",strokeWidth:2}}
+      ></line>
+    </svg>
+    )
   }
 
   const [clickOnBlock, setClickOnBlock] = useState<{
